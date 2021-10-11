@@ -1,0 +1,84 @@
+﻿@model AlgorithmTester.Models.FormModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@section scripts {
+    <script src="~/js/index.js"></script>
+}
+
+
+<div class="text-center">
+    <form method="post">
+        <div>
+            <h5>Enter your code in the box below</h5>
+            <br />
+            <textarea class="form-control" id="code-input" name="Code"></textarea>
+        </div>
+
+        <div>
+            <h5>Enter input and expected output</h5>
+            <div id="data" class="row">
+
+                <div class="input-group col-5">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Input Arguments</span>
+                    </div>
+                    <input class="form-control" id="input-arguments" type="text" />
+                </div>
+
+                <div class="input-group col-5">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Output Arguments</span>
+                    </div>
+                    <input class="form-control" id="output-arguments" type="text" />
+                </div>
+
+                <div class="input-group col">
+                    <input class="btn btn-primary btn-sm btn-block" id="add-button" type="button" value="Add" />
+                </div>
+
+            </div>
+        </div>
+
+        <div>
+            <table class="table table-striped" id="data-table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Input Arguments</th>
+                        <th scope="col">Output</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <input type="submit" value="Go" class="btn btn-success btn-lg btn-block" id="go" />
+            <div class="form-group row" id="output">
+                <label class="col-sm-2 col-form-label" for="accuracy">Accuracy</label>
+                <input class="col-sm-4 form-control" type="text" id="accuracy" name="Accuracy" readonly />
+                <label class="col-sm-2 col-form-label" for="speed">Speed</label>
+                <input class="col-sm-4 form-control" type="text" id="speed" name="Speed" readonly />
+            </div>
+        </div>
+    </form>
+</div>
