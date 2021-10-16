@@ -81,8 +81,27 @@ h5 {
 
 #code-input {
     height: 500px;
-    margin-bottom: 30px;
     resize: none;
+    font-family: Consolas, sans-serif;
+    tab-size: 4;
+    /*-moz-tab-size: 4;*/
+}
+
+#reset {
+    
+    height: 30px;
+    width: 30px;
+}
+
+#code-container {
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.topright {
+    position: absolute;
+    top: 4px;
+    right: 20px;
 }
 
 #data {
@@ -106,3 +125,4 @@ h5 {
     margin: auto;
     margin-bottom: 30px;
 }
+

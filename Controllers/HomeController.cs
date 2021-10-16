@@ -26,14 +26,17 @@ namespace AlgorithmTester.Controllers
         [HttpPost]
         public IActionResult Index(FormModel data)
         {
-            Console.Write("test");
-            Console.Write(data.Code);
-            Console.Write(data.InputData.Count);
-            Console.Write(data.OutputData.Count);
-            Console.Write(data.Accuracy);
-            Console.Write(data.Speed);
-            System.Diagnostics.Debug.WriteLine("test");
-            System.Diagnostics.Debug.WriteLine(data.Code);
+
+            Models.Test.PrintValues(data);
+
+            // could this be a separate thread? So the site loads the view and does calculations on separate threads
+            // this may require ajax...
+
+            CSCodeCompiler compiler = new CSCodeCompiler(data);
+            compiler.Compile();
+
+            // view should take in the parameters accuracy and speed to be displayed
+
             return View();
         }
 
