@@ -6,6 +6,9 @@ using System.Diagnostics;
 
 namespace AlgorithmTester.Models
 {
+    /*
+     * This class represents a data structure for holding the input/output data used for testing the code
+     */
     public class IOData
     {
         public List<string> InputData { get; set; }
@@ -20,6 +23,9 @@ namespace AlgorithmTester.Models
             Input = new List<object>();
         }
 
+        /*
+         * Returns the input values separated by commas
+         */
         public string GetMethodInputString()
         {
             return string.Join(',', InputData);

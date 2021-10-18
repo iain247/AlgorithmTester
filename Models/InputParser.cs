@@ -8,17 +8,15 @@ using System.Collections;
 
 namespace AlgorithmTester.Models
 {
+    /*
+     * This class takes in the user inputted code, input, and output, and extracts the appropriate information
+     */
     public class InputParser
     {
         public string MethodHeader { get; set; }
         public List<string> Input { get; set; }
         public List<string> Output { get; set; }
 
-        // REMOVE THESE ATTRIBUTES
-        // GET METHODS TO RETURN EACH ONE
-        // CHANGE CLASS TO TEXT PARSER
-        // ALSO RETURN FORMATTED INPUT DATA
-        // CONSTRUCTOR NEEDS INPUT DATA
 
         public InputParser(String code, List<string> input, List<string> output)
         {
@@ -27,15 +25,6 @@ namespace AlgorithmTester.Models
             this.Output = output;
             FindMethodHeader(code);
         }
-        //public void CompileCSCode()
-        //{
-        //    File.WriteAllTextAsync("UserCode/Input.cs", Code);
-        //    ParseCSCode();
-        //    FindArgumentTypes(MethodHeader);
-        //    PrintArgumentTypes();
-
-        //    // now use system commands to compile
-        //}
 
         private string FindMethodHeader(string code)
         {
@@ -50,6 +39,9 @@ namespace AlgorithmTester.Models
             return methodHeader;
         }
 
+        /*
+         * This method extracts the return type from the user supplied code
+         */
         public string FindIdentifier()
         {
             string[] methodHeaderWords = MethodHeader.Split(' ').Select(MethodHeaderWords => MethodHeaderWords.Trim()).ToArray();
@@ -67,6 +59,9 @@ namespace AlgorithmTester.Models
             return identifier;
         }
 
+        /*
+         * Finds the type of each argument required by the user supplied code and returns them in a list
+         */
         public List<string> FindArgumentTypes()
         {
             List<string> ArgumentTypes = new List<string>() ;
@@ -87,6 +82,9 @@ namespace AlgorithmTester.Models
             return ArgumentTypes;
         }
 
+        /*
+         * This method uses the input and output data to create a list of IOData objects representing the tabulated input/output data
+         */
         public List<IOData> FindDataSets()
         {
             // loop through input or output
