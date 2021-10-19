@@ -27,13 +27,11 @@ namespace AlgorithmTester.Controllers
         public IActionResult Index(FormModel data)
         {
 
-            Models.Test.PrintValues(data);
-
             // could this be a separate thread? So the site loads the view and does calculations on separate threads
             // this may require ajax...
 
             CSCodeCompiler compiler = new CSCodeCompiler(data);
-            compiler.Compile();
+            compiler.TestCode();
 
             // view should take in the parameters accuracy and speed to be displayed
 

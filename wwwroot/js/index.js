@@ -1,5 +1,5 @@
 ﻿
-var defaultCode = "public class Solution {\n\tpublic static int algorithm(int n) {\n\t\t//Enter code here\n\t\treturn 0;\n\t}\n}";
+var defaultCode = "public class Solution {\n\tpublic static int algorithm() {\n\t\t//Enter code here\n\t\treturn 0;\n\t}\n}";
 
 let rowNum = 1;
 

@@ -14,6 +14,7 @@ namespace AlgorithmTester.Models
     {
         public string FileName { get; set; }
         public string Code { get; set; }
+        public string TempPath { get; set; }
 
         public FileHandler(string code)
         {
@@ -30,7 +31,8 @@ namespace AlgorithmTester.Models
             {
                 string badFileName = Path.GetTempFileName();
                 FileName = Path.ChangeExtension(badFileName, ".cs");
-                Debug.WriteLine(FileName);
+                // delete the old file extension
+                File.Delete(badFileName);
 
                 // CHECK IF I NEED THESE LINES - IT THROWS FILENOTFOUNDEXCEPTION
 
@@ -51,13 +53,15 @@ namespace AlgorithmTester.Models
             try
             {
                 StreamWriter sw = File.AppendText(FileName);
+                sw.WriteLine("using System;");
                 sw.WriteLine(Code);
+                var x = string.Empty;
                 sw.WriteLine(
                 @"public class CodeRunner
 {
     public static void Main(string[] args)
     {
-        object x = Solution.algorithm(" + 1 + @");
+        Console.Write(Solution.algorithm(" + x + @"));
     }
 }");
                 sw.Flush();
@@ -71,6 +75,26 @@ namespace AlgorithmTester.Models
         public string GetExecutable()
         {
             return Path.ChangeExtension(FileName, ".exe");
+        }
+
+        public void DeleteAllFiles()
+        {
+            try
+            {
+                File.Delete(GetExecutable());
+            }
+            catch (Exception e1)
+            {
+                Debug.WriteLine("Could not delete executable");
+            }
+            try
+            {
+                File.Delete(FileName);
+            }
+            catch (Exception e2)
+            {
+                Debug.WriteLine("Could not delete .cs file");
+            }
         }
     }
 }

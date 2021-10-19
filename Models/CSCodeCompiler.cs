@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,23 +19,25 @@ namespace AlgorithmTester.Models
             this.FH = new FileHandler(model.Code);
         }
 
-        public void Compile()
+        public void TestCode()
         {
+            // show the model values
+            Model.PrintValues();
+
             // parse text to get identifer, argument types, and list of IOData objects
             InputParser ip = new InputParser(Model.Code, Model.InputData, Model.OutputData);
             string identifier = ip.FindIdentifier();
             List<string> argumentTypes = ip.FindArgumentTypes();
             DataSets = ip.FindDataSets();
 
-
             // cast data sets
             CastData(argumentTypes, identifier);
 
             // create a temporary file
-            string fileName = CreateFile();
+            CreateFile();
 
             // compile and run the code using CMD
-            CMDRun(fileName);
+            CMDRun();
         }
 
         private void CastData(List<string> argumentTypes, string identifier)
@@ -55,47 +58,60 @@ namespace AlgorithmTester.Models
         }
 
 
-        private void CMDRun(string fileName)
+        private void CMDRun()
         {
-            Debug.WriteLine("hi 1");
+            try
+            {
+                Compile();
+                try
+                {
+                    string output = RunExecutable();
+                    Debug.WriteLine("output: " + output);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine("can't run ");
+                }
+            } 
+            catch(Exception e)
+            {
+                Debug.WriteLine("can't compile");
+            }
+
+            // delete all the newly created files
+            FH.DeleteAllFiles();
+        }
+
+        private void Compile()
+        {
+            ProcessStartInfo ps = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                Arguments = @"/c cd " + Path.GetDirectoryName(FH.FileName) + " && csc " + FH.FileName
+            };
+
+            Process proc = Process.Start(ps);
+            proc.WaitForExit();
+        }
+
+        private string RunExecutable()
+        {
             ProcessStartInfo ps = new ProcessStartInfo
             {
                 FileName = "cmd.exe",
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
-                //Arguments = @"/k C:\Users\iainr\Documents\temp\testing.exe"
-                Arguments = @"/k csc " + fileName
+                Arguments = @"/c " + FH.GetExecutable()
             };
 
             Process proc = Process.Start(ps);
-
-            Debug.WriteLine("hi 2");
-
-            string result = proc.StandardOutput.ReadLine();
-            
-
+            string output = proc.StandardOutput.ReadLine();
             //proc.WaitForExit();
-            //
-            Debug.WriteLine("hi 3");
-            Debug.WriteLine(result);
 
-            Debug.WriteLine(FH.GetExecutable());
-            ProcessStartInfo ps2 = new ProcessStartInfo
-            {
-                FileName = FH.GetExecutable(),
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                //Arguments = @"/k C:\Users\iainr\Documents\temp\testing.exe"
-            };
-
-            Process proc2 = Process.Start(ps2);
-
-            Debug.WriteLine("hi 4");
-
-            string result2 = proc2.StandardOutput.ReadLine();
-            Debug.WriteLine(result2);
+            return output;
         }
     }
 }
