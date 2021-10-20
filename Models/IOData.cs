@@ -26,13 +26,15 @@ namespace AlgorithmTester.Models
         /*
          * Returns the input values separated by commas
          */
-        public string GetMethodInputString()
+        public string GetCommandLineArguments()
         {
-            return string.Join(',', InputData);
+            return string.Join(' ', InputData);
         }
 
         public void CastInputs(List<string> inputTypes)
         {
+            Debug.WriteLine(inputTypes.Count);
+            Debug.WriteLine(InputData.Count);
             for (int i=0; i<inputTypes.Count; i++)
             {
                 Input.Add(Cast(inputTypes[i], InputData[i]));
@@ -48,20 +50,44 @@ namespace AlgorithmTester.Models
         {
             switch (type)
             {
-                case "int":
-                    value = Convert.ToInt32(value);
-                    break;
                 case "bool":
                     value = Convert.ToBoolean(value);
+                    break;
+                case "byte":
+                    value = Convert.ToByte(value);
+                    break;
+                case "sbyte":
+                    value = Convert.ToSByte(value);
                     break;
                 case "char":
                     value = Convert.ToChar(value);
                     break;
-                case "float":
-                    value = Convert.ToSingle(value);
+                case "decimal":
+                    value = Convert.ToDecimal(value);
                     break;
                 case "double":
                     value = Convert.ToDouble(value);
+                    break;
+                case "float":
+                    value = Convert.ToSingle(value);
+                    break;
+                case "int":
+                    value = Convert.ToInt32(value);
+                    break;
+                case "uint":
+                    value = Convert.ToUInt32(value);
+                    break;
+                case "long":
+                    value = Convert.ToInt64(value);
+                    break;
+                case "ulong":
+                    value = Convert.ToUInt64(value);
+                    break;
+                case "short":
+                    value = Convert.ToInt16(value);
+                    break;
+                case "ushort":
+                    value = Convert.ToUInt16(value);
                     break;
             }
             return value;

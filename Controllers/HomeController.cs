@@ -30,8 +30,8 @@ namespace AlgorithmTester.Controllers
             // could this be a separate thread? So the site loads the view and does calculations on separate threads
             // this may require ajax...
 
-            CSCodeCompiler compiler = new CSCodeCompiler(data);
-            compiler.TestCode();
+            var tester = new CodeTester(data);
+            tester.Run();
 
             // view should take in the parameters accuracy and speed to be displayed
 

@@ -9,77 +9,36 @@ namespace AlgorithmTester.Models
 {
     public class CSCodeCompiler
     {
-        public FormModel Model { get; set; }
-        public List<IOData> DataSets { get; set; }
         public FileHandler FH { get; set; }
 
-        public CSCodeCompiler(FormModel model)
+        public CSCodeCompiler(FileHandler fh)
         {
-            this.Model = model;
-            this.FH = new FileHandler(model.Code);
+            this.FH = fh;
         }
 
-        public void TestCode()
-        {
-            // show the model values
-            Model.PrintValues();
-
-            // parse text to get identifer, argument types, and list of IOData objects
-            InputParser ip = new InputParser(Model.Code, Model.InputData, Model.OutputData);
-            string identifier = ip.FindIdentifier();
-            List<string> argumentTypes = ip.FindArgumentTypes();
-            DataSets = ip.FindDataSets();
-
-            // cast data sets
-            CastData(argumentTypes, identifier);
-
-            // create a temporary file
-            CreateFile();
-
-            // compile and run the code using CMD
-            CMDRun();
-        }
-
-        private void CastData(List<string> argumentTypes, string identifier)
-        {
-            foreach (IOData dataSet in DataSets)
-            {
-                dataSet.CastInputs(argumentTypes);
-                dataSet.CastOutput(identifier);
-            }
-        }
-
-        private string CreateFile()
+        public void CreateFile()
         {
             FH.CreateTempFile();
             FH.UpdateTempFile();
-
-            return FH.FileName;
         }
 
 
-        private void CMDRun()
+        public List<string> CMDRun(List<IOData> DataSets)
         {
-            try
-            {
-                Compile();
-                try
-                {
-                    string output = RunExecutable();
-                    Debug.WriteLine("output: " + output);
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine("can't run ");
-                }
-            } 
-            catch(Exception e)
-            {
-                Debug.WriteLine("can't compile");
-            }
+            Compile();
 
+            var codeOutput = new List<string>();
+            foreach(IOData dataSet in DataSets)
+            {
+                string arguments = dataSet.GetCommandLineArguments();
+                string output = RunExecutable(arguments);
+                codeOutput.Add(output);
+            }
+            
             // delete all the newly created files
             FH.DeleteAllFiles();
+
+            return codeOutput;
         }
 
         private void Compile()
@@ -92,11 +51,13 @@ namespace AlgorithmTester.Models
                 Arguments = @"/c cd " + Path.GetDirectoryName(FH.FileName) + " && csc " + FH.FileName
             };
 
+            Debug.WriteLine(ps.Arguments);
+
             Process proc = Process.Start(ps);
             proc.WaitForExit();
         }
 
-        private string RunExecutable()
+        private string RunExecutable(string arguments)
         {
             ProcessStartInfo ps = new ProcessStartInfo
             {
@@ -104,14 +65,17 @@ namespace AlgorithmTester.Models
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
                 CreateNoWindow = true,
-                Arguments = @"/c " + FH.GetExecutable()
+                Arguments = @"/c " + FH.GetExecutable() + " " + arguments
             };
+
+            Debug.WriteLine(ps.Arguments);
 
             Process proc = Process.Start(ps);
             string output = proc.StandardOutput.ReadLine();
-            //proc.WaitForExit();
+            proc.WaitForExit();
 
             return output;
         }
     }
+
 }
