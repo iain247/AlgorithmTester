@@ -16,11 +16,11 @@ namespace AlgorithmTester.Models
             this.FH = fh;
         }
 
-        public void CreateFile()
-        {
-            FH.CreateTempFile();
-            FH.UpdateTempFile();
-        }
+        //public void CreateFile(List<)
+        //{
+        //    FH.CreateTempFile();
+        //    FH.UpdateTempFile(List<string> argumentTypes);
+        //}
 
 
         public List<string> CMDRun(List<IOData> DataSets)

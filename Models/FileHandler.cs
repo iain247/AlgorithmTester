@@ -14,9 +14,8 @@ namespace AlgorithmTester.Models
     {
         public string FileName { get; set; }
         public string Code { get; set; }
-        public string TempPath { get; set; }
         public InputParser IP { get; set; }
-        public List<IOData> DataSets { get; set; }
+
 
         public FileHandler(InputParser ip)
         {
@@ -28,7 +27,7 @@ namespace AlgorithmTester.Models
         /*
          * This method creates a temporary file in the user's temp folder
          */
-        public void CreateTempFile()
+        public void CreateTempCSFile()
         {
             try
             {
@@ -46,6 +45,8 @@ namespace AlgorithmTester.Models
             {
                 Debug.WriteLine("Cannot create file");
             }
+
+            UpdateTempFile();
         }
 
         /* This method writes the user supplied code to the new file.
@@ -88,8 +89,6 @@ public class CodeRunner
         public string GetCastingCode(char[] variables, List<string> argumentTypes)
         {
             string castingCode = string.Empty;
-            
-            
 
             for (int i=0; i<argumentTypes.Count; i++)
             {

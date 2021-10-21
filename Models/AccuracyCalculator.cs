@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 
 namespace AlgorithmTester.Models
 {
-    public class AccuracyCalculator<T>
+    public class AccuracyCalculator
     {
-        public string Identifier { get; set; }
-        public List<T> CorrectOutputs { get; set; }
-        public List<T> CalculatedOutput { get; set; }
+        public IComparator Comparator { get; set; }
 
-        public static T GetTypefromString<T>(string mystring)
+
+        public AccuracyCalculator(List<string> correctOutput, List<string> calculatedOutput, string type)
         {
-            var foo = System.ComponentModel.TypeDescriptor.GetConverter(typeof(T));
-            return (T)(foo.ConvertFromInvariantString(mystring));
-
+            this.Comparator = ComparatorFactory.GetComparator(type);
+            this.Comparator.AddData(correctOutput, calculatedOutput);       
         }
+
+        
     }
 }

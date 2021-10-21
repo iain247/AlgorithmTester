@@ -13,20 +13,21 @@ namespace AlgorithmTester.Models
         public FileHandler FH { get; set; }
         public CSCodeCompiler Compiler { get; set; }
         public List<IOData> DataSets { get; set; }
+        public AccuracyCalculator AC { get; set; }
 
         public CodeTester(FormModel model)
         {
             this.Model = model;
-            IP = new InputParser(model.Code, model.InputData, model.OutputData);
-            FH = new FileHandler(IP);
-            Compiler = new CSCodeCompiler(FH);
-            DataSets = IP.FindDataSets();
+            this.IP = new InputParser(model.Code, model.InputData, model.OutputData);
+            this.FH = new FileHandler(IP);
+            this.Compiler = new CSCodeCompiler(FH);
+            this.DataSets = IP.FindDataSets();
         }
         public void Run()
         {
 
             // create the .cs file
-            Compiler.CreateFile();
+            FH.CreateTempCSFile();
 
             // compile and execute the program passing in the data from the table
             List<string> output = Compiler.CMDRun(DataSets);
@@ -34,6 +35,12 @@ namespace AlgorithmTester.Models
             PrintOutput(output);
 
             // calculate the accuracy of the output
+            string identifier = IP.FindIdentifier();
+            //AccuracyCalculator ac = new Accuracy
+            Type type = TypeConverter.GetType(identifier);
+
+
+            AC = new AccuracyCalculator(Model.OutputData, output, identifier);
 
         }
 
