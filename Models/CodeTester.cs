@@ -8,6 +8,10 @@ namespace AlgorithmTester.Models
 {
     public class CodeTester
     {
+        // ALL VARIABLES NEEDED TO UPDATE THE VIEW SHOULD BE HELD HERE
+        // PROBABLY DONT NEED ALL THE ATTRIBUTES HERE NOW
+        // ALSO DONT NEED A ACCURACYCALCULATOR CLASS SINCE ALL IT DOES IS USE THE COMPARATOR
+        // THIS CLASS CAN USE THE COMPARATOR DIRECTLY
         public FormModel Model { get; set; }
         public InputParser IP { get; set; }
         public FileHandler FH { get; set; }
@@ -25,6 +29,11 @@ namespace AlgorithmTester.Models
         }
         public void Run()
         {
+            // make a method for compiling
+
+            // make a separate method for finding accuracy
+
+            // make a seperate method for finding speed
 
             // create the .cs file
             FH.CreateTempCSFile();

@@ -18,11 +18,18 @@ namespace AlgorithmTester.Models
 
         public List<bool> FindCorrectData()
         {
-            return new List<bool>();
+            var correctAnswers = new List<bool>();
+            for (int i=0; i<CorrectOutput.Count; i++)
+            {
+                correctAnswers[i] = (CorrectOutput[i].Equals(CalculatedOutput[i]));
+            }
+            return correctAnswers;
         }
-        public double CalculateAccuracy()
+        public double CalculateAccuracy(List<bool> correctAnswers)
         {
-            return 0;
+            double NoOfCorrect = correctAnswers.Count(x => x);
+
+            return 100 * NoOfCorrect / correctAnswers.Count;
         }
 
     }

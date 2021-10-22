@@ -14,8 +14,6 @@ namespace AlgorithmTester.Models
         {
             this.Comparator = ComparatorFactory.GetComparator(type);
             this.Comparator.AddData(correctOutput, calculatedOutput);       
-        }
-
-        
+        }      
     }
 }
