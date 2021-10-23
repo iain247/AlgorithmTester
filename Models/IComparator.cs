@@ -7,8 +7,8 @@ namespace AlgorithmTester.Models
 {
     public interface IComparator
     {
-        public List<bool> FindCorrectData();
-        public double CalculateAccuracy();
+        public List<string> FindResults();
+        public double CalculateAccuracy(List<string> correctAnswers);
         public void AddData(List<string> correctOutputStrings, List<string> calculatedOutputStrings);
     }
 }

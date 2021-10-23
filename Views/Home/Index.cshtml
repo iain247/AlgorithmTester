@@ -19,8 +19,13 @@
                 <div class="topright">
                     <image id="reset" src="~/images/reset.png" alt="Reset Button" />
                 </div>
-                
-            </div>           
+                @{
+                    if (!(ViewBag.UserMessage.Equals(String.Empty)))
+                    {
+                        <textarea class="form-control" id="user-message" name="UserMessage" readonly>@ViewBag.UserMessage</textarea>
+                    }
+                }
+                </div>           
         </div>
 
         <div>
@@ -81,7 +86,7 @@
             <input type="submit" value="Go" class="btn btn-success btn-lg btn-block" id="go" />
             <div class="form-group row" id="output">
                 <label class="col-sm-2 col-form-label" for="accuracy">Accuracy</label>
-                <input class="col-sm-4 form-control" type="text" id="accuracy" name="Accuracy" readonly />
+                <input class="col-sm-4 form-control" type="text" id="accuracy" name="Accuracy"  value=@ViewBag.Accuracy readonly />
                 <label class="col-sm-2 col-form-label" for="speed">Speed</label>
                 <input class="col-sm-4 form-control" type="text" id="speed" name="Speed" readonly />
             </div>

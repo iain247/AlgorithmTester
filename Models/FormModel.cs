@@ -10,13 +10,14 @@ namespace AlgorithmTester.Models
     {
         public string Code { get; set; }
 
-        public int Accuracy { get; set; }
+        public double Accuracy { get; set; }
 
         public int Speed { get; set; }
 
         public List<string> InputData { get; set; }
 
         public List<string> OutputData { get; set; }
+        public string UserMessage { get; set; }
 
         public void PrintValues()
         {

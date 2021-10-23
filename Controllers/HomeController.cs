@@ -20,6 +20,7 @@ namespace AlgorithmTester.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.UserMessage = String.Empty;
             return View();
         }
 
@@ -33,7 +34,15 @@ namespace AlgorithmTester.Controllers
             var tester = new CodeTester(data);
             tester.Run();
 
-            // view should take in the parameters accuracy and speed to be displayed
+            double accuracy = tester.Accuracy;
+
+            string userMessage = tester.UserMessage;
+
+            Debug.WriteLine(userMessage);
+
+            ViewBag.UserMessage = userMessage;
+            ViewBag.Accuracy = accuracy + "%";
+
 
             return View();
         }

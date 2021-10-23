@@ -17,6 +17,12 @@ namespace AlgorithmTester.Models
         public string MethodHeader { get; set; }
         public List<string> Input { get; set; }
         public List<string> Output { get; set; }
+        public List<string> ArgumentTypes { get; set; }
+        public string Identifier { get; set; }
+        public int NumOfArguments { get; set; }
+
+        public static readonly string[] AllowedIdentifiers = new string[] { "bool", "byte", "sbyte", "char", "decimal", "double",
+                "float", "int", "uint", "long", "ulong", "short", "ushort"};
 
 
         public InputParser(String code, List<string> input, List<string> output)
@@ -24,59 +30,119 @@ namespace AlgorithmTester.Models
             this.Code = code;
             this.Input = input;
             this.Output = output;
-            FindMethodHeader(code);
+            this.ArgumentTypes = new List<string>();
         }
 
-        private void FindMethodHeader(string code)
+        public void ParseCode()
         {
-            using StringReader sr = new StringReader(code);
+            CheckClassHeader();
+            FindMethodHeader();
+            FindIdentifier();
+            FindArgumentTypes();
+        }
+
+        public void CheckClassHeader()
+        {
+            // check for the correct class header
+            using StringReader sr = new StringReader(Code);
+            string ClassHeader;
+            do
+            {
+                ClassHeader = sr.ReadLine();
+                if (ClassHeader is null)
+                {
+                    throw new InvalidCodeException("Invalid class header. Please use 'public class Solution'.");
+                }
+            }
+            while (!ClassHeader.Contains("public class Solution"));
+
+            
+        }
+
+        public void FindMethodHeader()
+        {
+            // check for the algorithm method
+            using StringReader sr = new StringReader(Code);
             do
             {
                 MethodHeader = sr.ReadLine();
+                if (MethodHeader is null)
+                {
+                    throw new InvalidCodeException("A method named 'Algorithm' must be included");
+                }
             }
-            while (!MethodHeader.Contains("static"));
+            while (!MethodHeader.Contains("Algorithm"));
+
+            // check that the method is static
+            if (!MethodHeader.Contains("static"))
+            {
+                throw new InvalidCodeException("No static method found");
+            }
+        }
+
+        public bool CheckArguments(IOData dataSet)
+        {
+            if (!(dataSet.InputData.Count == NumOfArguments))
+                return false;
+
+            // try cast each input to the appropriate type, if it can't be done return false
+            for (int i=0; i<NumOfArguments; i++)
+            {
+                try
+                {
+                    TypeConverter.Cast(dataSet.InputData[i], ArgumentTypes[i]);
+                }
+                catch(Exception e)
+                {
+                    return false;
+                }            
+            }
+            return true;        
         }
 
         /*
          * This method extracts the return type from the user supplied code
          */
-        public string FindIdentifier()
+        public void FindIdentifier()
         {
             string[] methodHeaderWords = MethodHeader.Split(' ').Select(MethodHeaderWords => MethodHeaderWords.Trim()).ToArray();
-            // loop through the method header until the identifer is found
-            int methodHeaderWordNum = 0;
-            string[] nonIdentifers = new string[] { "private", "public", "static" };
-            string identifier = null;
-            do
-            {
-                identifier = methodHeaderWords[methodHeaderWordNum++];
-            }
-            while (Array.IndexOf(nonIdentifers, identifier) > -1);
 
-            return identifier;
+            int identifierIndex = Array.IndexOf(methodHeaderWords, "static") + 1;
+
+            Identifier = methodHeaderWords[identifierIndex];
+
+            if (!AllowedIdentifiers.Contains(Identifier))
+                throw new InvalidCodeException(Identifier + " is an invalid return type. Return type must follow the static keyword");
         }
 
         /*
          * Finds the type of each argument required by the user supplied code and returns them in a list
          */
-        public List<string> FindArgumentTypes()
+        public void FindArgumentTypes()
         {
-            List<string> ArgumentTypes = new List<string>() ;
-
             // extract the arguments from the method header by finding substring between brackets
             int argumentsStartIndex = MethodHeader.IndexOf('(');
-            
             int argumentsEndIndex = MethodHeader.IndexOf(')');
             int length = argumentsEndIndex - (argumentsStartIndex + 1);
-            string argumentsString = MethodHeader.Substring(argumentsStartIndex + 1, length);
+
             // split into comma seperated values and trim
+            string argumentsString = MethodHeader.Substring(argumentsStartIndex + 1, length);  
             string[] arguments = argumentsString.Split(',').Select(arguments => arguments.Trim()).ToArray();
+
+            // update number of arguments
+            NumOfArguments = arguments.Length;
+            
+            // extract types and add to ArgumentTypes list
             int argumentsIndex = 0;
             foreach (string argument in arguments)
-            {
-                ArgumentTypes.Add(arguments[argumentsIndex++].Split(' ')[0]);
+            {     
+                string argumentType = arguments[argumentsIndex++].Split(' ')[0];
+
+                if (!AllowedIdentifiers.Contains(argumentType))
+                    throw new InvalidCodeException(argumentType + " is an invalid argument type.");
+
+                ArgumentTypes.Add(argumentType);
             }
-            return ArgumentTypes;
         }
 
         /*
@@ -87,6 +153,8 @@ namespace AlgorithmTester.Models
             // loop through input or output
             // create IOData objects for each data set
             List<IOData> DataSets = new List<IOData>();
+
+            if (Input==null) throw new InvalidDataException("No data supplied");
 
             for (int i=0; i<Input.Count; i++)
             {
@@ -102,5 +170,17 @@ namespace AlgorithmTester.Models
             return DataSets;
         }
 
+    }
+
+    public class InvalidCodeException : Exception
+    {
+        public InvalidCodeException(string message)
+            : base("Error with code: " + message) { }
+    }
+
+    public class InvalidDataException : Exception
+    {
+        public InvalidDataException(string message)
+            : base("Error with data: " + message) { }
     }
 }

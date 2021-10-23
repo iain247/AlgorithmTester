@@ -13,14 +13,11 @@ namespace AlgorithmTester.Models
     {
         public List<string> InputData { get; set; }
         public string OutputData { get; set; }
-        public List<object> Input { get; set; }
-        public object Output { get; set; }
 
         public IOData(List<string> input, string output)
         {
             this.InputData = input;
             this.OutputData = output;
-            Input = new List<object>();
         }
 
         /*

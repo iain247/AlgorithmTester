@@ -1,5 +1,5 @@
 ﻿
-var defaultCode = "public class Solution {\n\tpublic static int algorithm(int n) {\n\t\t//Enter code here\n\t\treturn 0;\n\t}\n}";
+var defaultCode = "public class Solution {\n\tpublic static int Algorithm(int n)\n\t{\n\t\t//Enter code here\n\t\treturn 0;\n\t}\n}";
 
 let rowNum = 1;
 
@@ -17,6 +17,8 @@ $(document).ready(function () {
         tableBody = $("table tbody");
         input = $("#input-arguments").val();
         output = $("#output-arguments").val();
+        $("#input-arguments").val("");
+        $("#output-arguments").val("");
 
         // check for empty fields
         if (input === "" || output === "") return;

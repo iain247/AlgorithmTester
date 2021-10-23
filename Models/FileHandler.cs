@@ -54,7 +54,7 @@ namespace AlgorithmTester.Models
          */
         public void UpdateTempFile()
         {
-            List<string> argumentTypes = IP.FindArgumentTypes();
+            List<string> argumentTypes = IP.ArgumentTypes;
             char[] variableNames = GenerateVariableNames(argumentTypes.Count);
             try
             {
@@ -68,7 +68,7 @@ public class CodeRunner
     {
         " +
         GetCastingCode(variableNames, argumentTypes) + @"
-        System.Console.Write(Solution.algorithm(" + GetArguments(variableNames) + @"));
+        System.Console.Write(Solution.Algorithm(" + GetArguments(variableNames) + @"));
     }
     public static T GetTypeFromString<T> (string typeString)
     {
@@ -133,22 +133,10 @@ public class CodeRunner
 
         public void DeleteAllFiles()
         {
-            try
-            {
-                File.Delete(GetExecutable());
-            }
-            catch (Exception e1)
-            {
-                Debug.WriteLine("Could not delete executable");
-            }
-            try
-            {
-                File.Delete(FileName);
-            }
-            catch (Exception e2)
-            {
-                Debug.WriteLine("Could not delete .cs file");
-            }
+            File.Delete(GetExecutable());
+            File.Delete(FileName);
         }
+
     }
+
 }

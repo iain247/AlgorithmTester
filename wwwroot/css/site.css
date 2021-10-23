@@ -84,7 +84,12 @@ h5 {
     resize: none;
     font-family: Consolas, sans-serif;
     tab-size: 4;
-    /*-moz-tab-size: 4;*/
+}
+
+#user-message {
+    height: 100px;
+    resize: none;
+    font-family: Consolas, sans-serif;
 }
 
 #reset {
