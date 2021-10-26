@@ -22,16 +22,9 @@ namespace AlgorithmTester.Models
             CalculatedOutput = new List<string>();
         }
 
-        public double CalculateAccuracy(List<bool> correctAnswers)
-        {
-            double NoOfCorrect = correctAnswers.Count(x => x);
-
-            return 100 * NoOfCorrect / correctAnswers.Count;
-        }
-
         public double CalculateAccuracy(List<string> correctAnswers)
         {
-            double NoOfCorrect = correctAnswers.Count(x => x.Equals("correct"));
+            double NoOfCorrect = correctAnswers.Count(x => x.Equals("Correct"));
 
             return 100 * NoOfCorrect / correctAnswers.Count;
         }
@@ -48,36 +41,44 @@ namespace AlgorithmTester.Models
                     correctAnswers.Add("Invalid Input");
                     continue;
                 }
+
                 // otherwise try casting the output
+                // first try casting the user supplied output to the appropriate type
                 try
                 {
-                    // first cast the values to the appropriate type
-                    T castCorrectOutput = Cast(CorrectOutput[i]);
-                    T castCalculatedOutput = Cast(CalculatedOutput[i]);
-
-                    if (CorrectOutput[i].Equals(CalculatedOutput[i]))
-                    {
-                        correctAnswers.Add("correct");
-                    }
-                    else
-                    {
-                        correctAnswers.Add("incorrect");
-                    }
+                    
+                    T castCorrectOutput = TypeConverter.GetTypefromString<T>(CorrectOutput[i]);
                 }
-                // outputs which resulted in runtime errors will not be able to be cast correctly
-                catch (Exception e)
+                // if this causes error, then the user has provided invalid output
+                catch(Exception)
                 {
-                    correctAnswers.Add("runtime error");
+                    correctAnswers.Add("Invalid Output");
+                    continue;
                 }
 
+                // next try casting the calculated output
+                try
+                {
+                    T castCalculatedOutput = TypeConverter.GetTypefromString<T>(CalculatedOutput[i]);
+                }
+                // if this causes and error, then there has been a runtime error due to the input
+                catch(Exception)
+                {
+                    correctAnswers.Add("Runtime Error");
+                    continue;
+                }
+
+                // if casts are accepted, then check the accuracy of the calculated output
+                if (CorrectOutput[i].Equals(CalculatedOutput[i]))
+                {
+                    correctAnswers.Add("Correct");
+                }
+                else
+                {
+                    correctAnswers.Add("Incorrect");
+                }            
             }
             return correctAnswers;
-        }
-
-        public T Cast(string value)
-        {
-            var converter = System.ComponentModel.TypeDescriptor.GetConverter(typeof(T));
-            return (T)converter.ConvertFromInvariantString(value);
         }
     }
 }

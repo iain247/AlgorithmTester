@@ -42,7 +42,7 @@ namespace AlgorithmTester.Models
             }
             
             // delete all the newly created files
-            FH.DeleteAllFiles();
+            //FH.DeleteAllFiles();
 
             return codeOutput;
         }
@@ -66,7 +66,7 @@ namespace AlgorithmTester.Models
             proc.WaitForExit();
         }
 
-        private string RunExecutable(string arguments)
+        public string RunExecutable(string arguments)
         {
             ProcessStartInfo ps = new ProcessStartInfo
             {
@@ -119,6 +119,7 @@ namespace AlgorithmTester.Models
 
             return errorMessage.Trim();
         }
+
     }
     public class CompilationErrorException : Exception
     {

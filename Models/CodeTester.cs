@@ -19,6 +19,7 @@ namespace AlgorithmTester.Models
         public InputParser IP { get; set; }
         public List<IOData> DataSets { get; set; }
         public string UserMessage { get; set; }
+        public CodeCompiler Compiler { get; set; }
 
         public CodeTester(FormModel model)
         {
@@ -26,29 +27,18 @@ namespace AlgorithmTester.Models
         }
         public void Run()
         {
-            try
-            {
-                // Parse the user's code
-                ParseCode();
-                // make a method for compiling
-                List<string> calculatedOutput = ExecuteCode();
 
-                CalculateAccuracy(calculatedOutput);
+            // Parse the user's code
+            ParseCode();
+            // make a method for compiling
+            List<string> calculatedOutput = ExecuteCode();
 
-                PrintOutput(calculatedOutput);
+            CalculateAccuracy(calculatedOutput);
 
-                UserMessage = "Code was compiled and executed correctly.";
+            PrintOutput(calculatedOutput);
 
-            }
-            catch (Exception e)
-            {
-                UserMessage = e.Message;
-                Debug.WriteLine(e.Message);
-            }
-
-            // make a separate method for finding accuracy
-            
-
+            // make a separate method for finding speed
+            CalculateSpeed();
         }
 
         public void ParseCode()
@@ -60,11 +50,10 @@ namespace AlgorithmTester.Models
 
         public List<string> ExecuteCode()
         {
-            //FileHandler fh = new FileHandler(IP);
-            CodeCompiler compiler = new CodeCompiler(IP);
+            Compiler = new CodeCompiler(IP);
 
             // compile and execute the program passing in the data from the table
-            var output = compiler.CMDRun(DataSets);
+            var output = Compiler.CMDRun(DataSets);
 
             return output;
         }
@@ -81,6 +70,12 @@ namespace AlgorithmTester.Models
 
             Results = comparator.FindResults();
             Accuracy = comparator.CalculateAccuracy(Results);
+            Accuracy = Math.Round(Accuracy, 2);
+        }
+
+        public void CalculateSpeed()
+        {
+
         }
 
         public void PrintOutput(List<string> output)

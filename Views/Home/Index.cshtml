@@ -15,14 +15,14 @@
             <h5>Enter your code in the box below</h5>
             <br />
             <div class="container-fluid" id="code-container">
-                <textarea class="form-control" id="code-input" name="Code"></textarea>
+                <textarea class="form-control" id="code-input" name="Code">@Model.Code</textarea>
                 <div class="topright">
-                    <image id="reset" src="~/images/reset.png" alt="Reset Button" />
+                    <image id="reset" src="images/reset.png" alt="Reset Button" />
                 </div>
                 @{
-                    if (!(ViewBag.UserMessage.Equals(String.Empty)))
+                    if (!(Model.UserMessage.Equals(String.Empty)))
                     {
-                        <textarea class="form-control" id="user-message" name="UserMessage" readonly>@ViewBag.UserMessage</textarea>
+                        <textarea class="form-control" id="user-message" name="UserMessage" readonly>@Model.UserMessage</textarea>
                     }
                 }
                 </div>           
@@ -53,6 +53,8 @@
             </div>
         </div>
 
+        <!-- Attach the number of rows from the model to a div to be accessed by javascript -->
+        <div id="rowNum" data-name="@(Model.NumData + 1)"></div>
         <div>
             <table class="table table-striped" id="data-table">
                 <thead>
@@ -60,24 +62,30 @@
                         <th scope="col">#</th>
                         <th scope="col">Input Arguments</th>
                         <th scope="col">Output</th>
+                        <th scope="col">Result</th>
+                        <th scope="col"></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                <tbody>            
+                    @{ 
+                        for (int i=0; i<Model.InputData.Count; i++)
+                        {
+                            <tr>
+                                <th scope="row">@(i+1)</th>
+                                <td>@Model.InputData[i]<input type="hidden" name="InputData[]" value="@Model.InputData[i]" /></td>
+                                <td>@Model.OutputData[i]<input type="hidden" name="OutputData[]" value="@Model.OutputData[i]" /></td>
+                                <td>@Model.Results[i]</td>
+                                <td>
+                                @{ 
+                                    if (Model.InputData[i] != "")
+                                    {
+                                        <image class="delete-row" src="images/delete.png" alt="delete" />
+                                    }
+                                }
+                                </td>
+                            </tr>
+                        }    
+                    }
                 </tbody>
             </table>
         </div>
@@ -86,7 +94,7 @@
             <input type="submit" value="Go" class="btn btn-success btn-lg btn-block" id="go" />
             <div class="form-group row" id="output">
                 <label class="col-sm-2 col-form-label" for="accuracy">Accuracy</label>
-                <input class="col-sm-4 form-control" type="text" id="accuracy" name="Accuracy"  value=@ViewBag.Accuracy readonly />
+                <input class="col-sm-4 form-control" type="text" id="accuracy" name="Accuracy"  value="@Model.Accuracy" readonly />
                 <label class="col-sm-2 col-form-label" for="speed">Speed</label>
                 <input class="col-sm-4 form-control" type="text" id="speed" name="Speed" readonly />
             </div>

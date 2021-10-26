@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace AlgorithmTester.Models
 {
-    public class TypeConverter
+    public static class TypeConverter
     {
         public static readonly Dictionary<string, Type> TypeDict = new Dictionary<string, Type>()
             {
@@ -22,6 +22,7 @@ namespace AlgorithmTester.Models
                 {"ulong",  typeof(ulong)},
                 {"short",  typeof(short)},
                 {"ushort",  typeof(ushort)},
+                {"string", typeof(string)}
             };
 
         public static Type GetType(string identifier)

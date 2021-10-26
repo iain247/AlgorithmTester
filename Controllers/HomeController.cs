@@ -20,8 +20,10 @@ namespace AlgorithmTester.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.UserMessage = String.Empty;
-            return View();
+            //ViewBag.Results = new List<string>() { "", "", "" };
+            //ViewBag.UserMessage = String.Empty;
+
+            return View(new FormModel());
         }
 
         [HttpPost]
@@ -30,21 +32,38 @@ namespace AlgorithmTester.Controllers
 
             // could this be a separate thread? So the site loads the view and does calculations on separate threads
             // this may require ajax...
+            data.PrintValues();
+
+            data.DeleteEmptyData();
+
+            data.PrintValues();
 
             var tester = new CodeTester(data);
-            tester.Run();
+            FormModel updatedModel = new FormModel()
+            {
+                Code = data.Code,
+                InputData = data.InputData,
+                OutputData = data.OutputData,
+            };
 
-            double accuracy = tester.Accuracy;
+            try
+            {
+                
+                tester.Run();
+                updatedModel.Accuracy = tester.Accuracy.ToString() + "%";
+                updatedModel.Results = tester.Results;
+                updatedModel.UserMessage = "Code was compiled and executed successfully.";
+            }
+            catch (Exception e)
+            {
+                updatedModel.UserMessage = e.Message;
+            }
 
-            string userMessage = tester.UserMessage;
 
-            Debug.WriteLine(userMessage);
-
-            ViewBag.UserMessage = userMessage;
-            ViewBag.Accuracy = accuracy + "%";
+            updatedModel.PadData();
 
 
-            return View();
+            return View(updatedModel);
         }
 
         public IActionResult Privacy()

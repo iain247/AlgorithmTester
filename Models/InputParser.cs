@@ -22,7 +22,7 @@ namespace AlgorithmTester.Models
         public int NumOfArguments { get; set; }
 
         public static readonly string[] AllowedIdentifiers = new string[] { "bool", "byte", "sbyte", "char", "decimal", "double",
-                "float", "int", "uint", "long", "ulong", "short", "ushort"};
+                "float", "int", "uint", "long", "ulong", "short", "ushort", "string"};
 
 
         public InputParser(String code, List<string> input, List<string> output)
@@ -55,8 +55,6 @@ namespace AlgorithmTester.Models
                 }
             }
             while (!ClassHeader.Contains("public class Solution"));
-
-            
         }
 
         public void FindMethodHeader()
@@ -92,7 +90,7 @@ namespace AlgorithmTester.Models
                 {
                     TypeConverter.Cast(dataSet.InputData[i], ArgumentTypes[i]);
                 }
-                catch(Exception e)
+                catch(Exception)
                 {
                     return false;
                 }            
@@ -154,7 +152,7 @@ namespace AlgorithmTester.Models
             // create IOData objects for each data set
             List<IOData> DataSets = new List<IOData>();
 
-            if (Input==null) throw new InvalidDataException("No data supplied");
+            if (Input.Count()==0) throw new InvalidDataException("No data supplied");
 
             for (int i=0; i<Input.Count; i++)
             {
