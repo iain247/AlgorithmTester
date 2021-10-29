@@ -18,6 +18,8 @@ namespace AlgorithmTester.Models
         public List<string> InputData { get; set; }
         public List<string> OutputData { get; set; }  
         public List<string> Results { get; set; }
+        public List<IOData> TestArguments { get; set; }
+        public List<string> Times { get; set; }
         private int _numData;
         public int NumData
         {

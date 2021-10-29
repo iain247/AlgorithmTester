@@ -9,6 +9,5 @@ namespace AlgorithmTester.Models
     {
         public List<string> FindResults();
         public double CalculateAccuracy(List<string> correctAnswers);
-        public void AddData(List<string> correctOutputStrings, List<string> calculatedOutputStrings);
     }
 }

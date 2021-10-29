@@ -18,6 +18,7 @@ namespace AlgorithmTester.Models
         public List<string> Input { get; set; }
         public List<string> Output { get; set; }
         public List<string> ArgumentTypes { get; set; }
+        public List<string> ArgumentNames { get; set; }
         public string Identifier { get; set; }
         public int NumOfArguments { get; set; }
 
@@ -31,6 +32,7 @@ namespace AlgorithmTester.Models
             this.Input = input;
             this.Output = output;
             this.ArgumentTypes = new List<string>();
+            this.ArgumentNames = new List<string>();
         }
 
         public void ParseCode()
@@ -38,7 +40,7 @@ namespace AlgorithmTester.Models
             CheckClassHeader();
             FindMethodHeader();
             FindIdentifier();
-            FindArgumentTypes();
+            FindArguments();
         }
 
         public void CheckClassHeader()
@@ -78,9 +80,12 @@ namespace AlgorithmTester.Models
             }
         }
 
+        /*
+         * This checks the IOData objects and returns true if the inputs are valid
+         */
         public bool CheckArguments(IOData dataSet)
         {
-            if (!(dataSet.InputData.Count == NumOfArguments))
+            if (dataSet.InputData.Count != NumOfArguments)
                 return false;
 
             // try cast each input to the appropriate type, if it can't be done return false
@@ -97,6 +102,36 @@ namespace AlgorithmTester.Models
             }
             return true;        
         }
+
+        /*
+         * This checks a single string of comma seperated arguments and returns true if the inputs are valid
+         * DECIDED NOT TO USE THIS AS THE INPUTS WONT BE WRONG. IF THEY ARE, ITS DUE TO USER ERROR AND AN EXCEPTION
+         * WILL BE THROWN EARLIER IN THE PROGRAMME.
+         */
+        //public bool CheckArguments(string argumentString)
+        //{
+        //    // split argument string into comma seperated values to get each argument
+        //    string[] arguments = argumentString.Split(',').Select(arguments => arguments.Trim()).ToArray();
+
+
+        //    // check the number of arguments
+        //    if (arguments.Length != NumOfArguments)
+        //        return false;
+
+        //    // try cast each input to the appropriate type, if it can't be done return false
+        //    for (int i = 0; i < NumOfArguments; i++)
+        //    {
+        //        try
+        //        {
+        //            TypeConverter.Cast(arguments[i], ArgumentTypes[i]);
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return false;
+        //        }
+        //    }
+        //    return true;
+        //}
 
         /*
          * This method extracts the return type from the user supplied code
@@ -116,7 +151,7 @@ namespace AlgorithmTester.Models
         /*
          * Finds the type of each argument required by the user supplied code and returns them in a list
          */
-        public void FindArgumentTypes()
+        public void FindArguments()
         {
             // extract the arguments from the method header by finding substring between brackets
             int argumentsStartIndex = MethodHeader.IndexOf('(');
@@ -133,13 +168,16 @@ namespace AlgorithmTester.Models
             // extract types and add to ArgumentTypes list
             int argumentsIndex = 0;
             foreach (string argument in arguments)
-            {     
-                string argumentType = arguments[argumentsIndex++].Split(' ')[0];
+            {
+                string[] foo = arguments[argumentsIndex++].Split(' ');
+                string argumentType = foo[0];
+                string argumentName = foo[1];
 
                 if (!AllowedIdentifiers.Contains(argumentType))
                     throw new InvalidCodeException(argumentType + " is an invalid argument type.");
 
                 ArgumentTypes.Add(argumentType);
+                ArgumentNames.Add(argumentName);
             }
         }
 

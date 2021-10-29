@@ -13,11 +13,22 @@ namespace AlgorithmTester.Models
     {
         public List<string> InputData { get; set; }
         public string OutputData { get; set; }
+        public List<string> ArgumentNames { get; set; }
 
         public IOData(List<string> input, string output)
         {
             this.InputData = input;
             this.OutputData = output;
+        }
+
+        public IOData(List<string> input)
+        {
+            this.InputData = input;
+        }
+
+        public void AddArgumentNames(List<string> argumentNames)
+        {
+            this.ArgumentNames = argumentNames;
         }
 
         /*
@@ -26,6 +37,11 @@ namespace AlgorithmTester.Models
         public string GetCommandLineArguments()
         {
             return string.Join(' ', InputData);
+        }
+
+        public string ShowAllInputs()
+        {
+            return string.Join(',', InputData);
         }
     }
 }

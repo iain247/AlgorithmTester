@@ -3,66 +3,80 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Threading;
 
 namespace AlgorithmTester.Models
 {
-    public class SpeedCalculator : ISpeedTester
+    public class SpeedCalculator
     {
-        public List<string> TestArguments { get; set; }
-        //public List<T> TestData { get; set; }
+        public List<IOData> TestData { get; set; }
         public CodeCompiler Compiler { get; set; }
+        public InputParser IP { get; set; }
+        public List<string> Times { get; set; }
+        public const int TimeLimit = 10000;
 
-        public SpeedCalculator()
+        public SpeedCalculator(CodeCompiler c)
         {
-            this.TestArguments = new List<string>();
+            this.TestData = new List<IOData>();
+            this.Times = new List<string>();
+            this.Compiler = c;
+            this.IP = c.IP;
             GenerateTestData();
         }
 
         public void AddCompiler(CodeCompiler c)
         {
             this.Compiler = c;
+            this.IP = c.IP;
         }
 
-        public List<double> FindTimes()
+        public async Task CalculateTimes()
         {
-            var times = new List<double>();
-            // put test data into compiler
-            Stopwatch stopwatch = new Stopwatch();
+            var tasks = new List<Task<TimeSpan>>();
 
-            foreach (string arguments in TestArguments)
+            // create a task for each set of testing data
+            for (int i=0; i<TestData.Count(); i++)
             {
-                stopwatch.Start();
-                Compiler.RunExecutable(arguments);
-
+                Debug.WriteLine("creating task " + i);
+                IOData arguments = TestData[i];
+                Task<TimeSpan> executionTask = ExecuteAsync(arguments);
+                tasks.Add(executionTask);                   
             }
+            Debug.WriteLine("created tasks, now waiting...");
+            // start each task asynchronously
+            foreach (var time in await Task.WhenAll(tasks))
+            {
+                Debug.WriteLine("finished a task");
+                Times.Add(String.Format("{0:00}:{1:00}:{2:00}.{3:00}",
+                    time.Hours, time.Minutes, time.Seconds, time.Milliseconds / 10));
+            }
+            Debug.WriteLine("calculated all times");
+        }
 
-            return times;
-            
+        public Task<TimeSpan> ExecuteAsync(IOData arguments)
+        {
+            return Task.Run(() =>
+            {
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+
+
+                Compiler.RunExecutable(arguments.GetCommandLineArguments());
+                stopwatch.Stop();
+                TimeSpan time = stopwatch.Elapsed;
+                return time;
+            });             
         }
 
         public void GenerateTestData()
         {
-            // GOING TO MOVE THIS TO ITS OWN STATIC CLASS
-            TestArguments.Add(CreateMultipleArguments("1"));
-            TestArguments.Add(CreateMultipleArguments("10"));
-            TestArguments.Add(CreateMultipleArguments("100"));
-            TestArguments.Add(CreateMultipleArguments("1000"));
-            TestArguments.Add(CreateMultipleArguments("10000"));
-            TestArguments.Add(CreateMultipleArguments("100000"));
-        }
-
-        // THIS DOESNT ACCOUNT FOR DIFFERENT TYPES
-        public string CreateMultipleArguments(string value)
-        {
-            int numOfArguments = Compiler.IP.NumOfArguments;
-            string arguments = "";
-            for (int i=0; i<numOfArguments-1; i++)
+            for (int i=0; i<InputTestValues.TestValueSize; i++)
             {
-                arguments += value + ",";
+                // find array of arguments
+                IOData data = InputTestValues.GenerateData(IP.ArgumentTypes, i);
+                data.AddArgumentNames(IP.ArgumentNames);
+                TestData.Add(data);
             }
-            arguments += value;
-
-            return arguments;
         }
     }
 }

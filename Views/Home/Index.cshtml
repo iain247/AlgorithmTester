@@ -25,7 +25,7 @@
                         <textarea class="form-control" id="user-message" name="UserMessage" readonly>@Model.UserMessage</textarea>
                     }
                 }
-                </div>           
+            </div>
         </div>
 
         <div>
@@ -66,9 +66,9 @@
                         <th scope="col"></th>
                     </tr>
                 </thead>
-                <tbody>            
-                    @{ 
-                        for (int i=0; i<Model.InputData.Count; i++)
+                <tbody>
+                    @{
+                        for (int i = 0; i < Model.InputData.Count; i++)
                         {
                             <tr>
                                 <th scope="row">@(i+1)</th>
@@ -76,15 +76,15 @@
                                 <td>@Model.OutputData[i]<input type="hidden" name="OutputData[]" value="@Model.OutputData[i]" /></td>
                                 <td>@Model.Results[i]</td>
                                 <td>
-                                @{ 
-                                    if (Model.InputData[i] != "")
-                                    {
-                                        <image class="delete-row" src="images/delete.png" alt="delete" />
+                                    @{
+                                        if (Model.InputData[i] != "")
+                                        {
+                                            <image class="delete-row" src="images/delete.png" alt="delete" />
+                                        }
                                     }
-                                }
                                 </td>
                             </tr>
-                        }    
+                        }
                     }
                 </tbody>
             </table>
@@ -94,10 +94,49 @@
             <input type="submit" value="Go" class="btn btn-success btn-lg btn-block" id="go" />
             <div class="form-group row" id="output">
                 <label class="col-sm-2 col-form-label" for="accuracy">Accuracy</label>
-                <input class="col-sm-4 form-control" type="text" id="accuracy" name="Accuracy"  value="@Model.Accuracy" readonly />
+                <input class="col-sm-4 form-control" type="text" id="accuracy" name="Accuracy" value="@Model.Accuracy" readonly />
                 <label class="col-sm-2 col-form-label" for="speed">Speed</label>
                 <input class="col-sm-4 form-control" type="text" id="speed" name="Speed" readonly />
             </div>
         </div>
+
+        @{
+            if (!(Model.Times is null))
+            {
+                <table class="table table-sm table-bordered" id="speed-table">
+                    <thead>
+                        <tr>
+                            <th scope="col" colspan="@Model.TestArguments[0].ArgumentNames.Count">Testing Arguments</th>
+                            <th scope="col" rowspan="2">Times</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            @{
+                                for (int i = 0; i < Model.TestArguments[i].ArgumentNames.Count; i++)
+                                {
+                                    <th scope="col">@Model.TestArguments[0].ArgumentNames[i]</th>
+                                }
+                            }
+                        </tr>
+                        @{
+                            for (int i = 0; i < Model.Times.Count; i++)
+                            {
+                                <tr>
+                                    @{
+                                        for (int j = 0; j < Model.TestArguments[i].ArgumentNames.Count; j++)
+                                        {
+                                            <td>@Model.TestArguments[i].InputData[j]</td>
+                                        }
+                                    }
+                                    <td>@Model.Times[i]</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            }
+        }
+
     </form>
 </div>

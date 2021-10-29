@@ -10,16 +10,11 @@ namespace AlgorithmTester.Models
     {
         public List<string> CorrectOutput { get; set; }
         public List<string> CalculatedOutput { get; set; }
-
-        public void AddData(List<string> correctOutputStrings, List<string> calculatedOutputStrings)
+    
+        public AccuracyCalculator(List<string> correctOutputStrings, List<string> calculatedOutputStrings)
         {
             this.CorrectOutput = correctOutputStrings;
             this.CalculatedOutput = calculatedOutputStrings;
-        }
-        public AccuracyCalculator()
-        {
-            CorrectOutput = new List<string>();
-            CalculatedOutput = new List<string>();
         }
 
         public double CalculateAccuracy(List<string> correctAnswers)

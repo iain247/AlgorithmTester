@@ -20,6 +20,8 @@ namespace AlgorithmTester.Models
         public List<IOData> DataSets { get; set; }
         public string UserMessage { get; set; }
         public CodeCompiler Compiler { get; set; }
+        public List<string> Times { get; set; }
+        public List<IOData> TestArguments { get; set; }
 
         public CodeTester(FormModel model)
         {
@@ -39,6 +41,8 @@ namespace AlgorithmTester.Models
 
             // make a separate method for finding speed
             CalculateSpeed();
+
+            Compiler.DeleteAllFiles();
         }
 
         public void ParseCode()
@@ -64,8 +68,7 @@ namespace AlgorithmTester.Models
             Debug.WriteLine("identifier: " + IP.Identifier);
             string identifier = IP.Identifier;
 
-            IComparator comparator = AccuracyCalculatorFactory.Create(identifier);
-            comparator.AddData(Model.OutputData, calculatedOutput);
+            IComparator comparator = AccuracyCalculatorFactory.Create(identifier, Model.OutputData, calculatedOutput);
 
 
             Results = comparator.FindResults();
@@ -75,7 +78,16 @@ namespace AlgorithmTester.Models
 
         public void CalculateSpeed()
         {
-
+            SpeedCalculator sc = new SpeedCalculator(Compiler);
+            TestArguments = sc.TestData;
+           
+            sc.CalculateTimes().Wait();
+            Times = sc.Times;
+            Debug.WriteLine("times should be calculated by now");
+            foreach (string time in sc.Times)
+            {
+                Debug.WriteLine("time:" + time);
+            }
         }
 
         public void PrintOutput(List<string> output)

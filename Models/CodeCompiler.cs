@@ -66,6 +66,10 @@ namespace AlgorithmTester.Models
             proc.WaitForExit();
         }
 
+        /*
+         *  TRY THIS FOR THE SPEED CHECKS
+         */
+    
         public string RunExecutable(string arguments)
         {
             ProcessStartInfo ps = new ProcessStartInfo
@@ -86,6 +90,7 @@ namespace AlgorithmTester.Models
 
             return output;
         }
+
 
         public void CheckCompilation(string compilationOutput)
         {
@@ -118,6 +123,12 @@ namespace AlgorithmTester.Models
             string errorMessage = line[(i + 1)..];
 
             return errorMessage.Trim();
+        }
+
+        public void DeleteAllFiles()
+        {
+            File.Delete(FH.GetExecutable());
+            File.Delete(FH.FileName);
         }
 
     }

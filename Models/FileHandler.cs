@@ -130,13 +130,6 @@ public class CodeRunner
         {
             return Path.ChangeExtension(FileName, ".exe");
         }
-
-        public void DeleteAllFiles()
-        {
-            File.Delete(GetExecutable());
-            File.Delete(FileName);
-        }
-
     }
 
 }

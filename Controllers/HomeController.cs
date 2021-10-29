@@ -45,7 +45,10 @@ namespace AlgorithmTester.Controllers
                 InputData = data.InputData,
                 OutputData = data.OutputData,
             };
-
+            /*
+             * COULD UPDATED THE MODEL WITH A SINGLE METHOD CALL
+             * FOR EXAMPLE: UPDATEDMODEL.UPDATE(CODETESTER);
+             */
             try
             {
                 
@@ -53,6 +56,8 @@ namespace AlgorithmTester.Controllers
                 updatedModel.Accuracy = tester.Accuracy.ToString() + "%";
                 updatedModel.Results = tester.Results;
                 updatedModel.UserMessage = "Code was compiled and executed successfully.";
+                updatedModel.TestArguments = tester.TestArguments;
+                updatedModel.Times = tester.Times;
             }
             catch (Exception e)
             {

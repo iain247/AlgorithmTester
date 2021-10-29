@@ -131,3 +131,8 @@ h5 {
     margin-bottom: 30px;
 }
 
+#speed-table {
+    width: 500px;
+    margin: auto;
+    vertical-align: middle;
+}
