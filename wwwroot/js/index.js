@@ -25,7 +25,7 @@ $(document).ready(function () {
      * function for modifying/appending table with input/output data
      */
     $("#add-button").click(function () {
-        tableBody = $("table tbody");
+        tableBody = $("#data-table tbody");
         input = $("#input-arguments").val();
         output = $("#output-arguments").val();
         $("#input-arguments").val("");
@@ -68,7 +68,7 @@ $(document).ready(function () {
         currentRow = row.find("th").html();
 
         // get the table body
-        tableBody = $("table tbody");
+        tableBody = $("#data-table tbody");
 
         // push each table row up by one to replace the deleted row
         for (i = currentRow; i < tableSize; i++) {       

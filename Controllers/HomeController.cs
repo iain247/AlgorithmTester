@@ -29,44 +29,26 @@ namespace AlgorithmTester.Controllers
         [HttpPost]
         public IActionResult Index(FormModel data)
         {
-
-            // could this be a separate thread? So the site loads the view and does calculations on separate threads
-            // this may require ajax...
-            data.PrintValues();
-
+            // delete the empty input values which may exist from the IO table
             data.DeleteEmptyData();
 
-            data.PrintValues();
-
+            // create a new testing object
             var tester = new CodeTester(data);
-            FormModel updatedModel = new FormModel()
-            {
-                Code = data.Code,
-                InputData = data.InputData,
-                OutputData = data.OutputData,
-            };
-            /*
-             * COULD UPDATED THE MODEL WITH A SINGLE METHOD CALL
-             * FOR EXAMPLE: UPDATEDMODEL.UPDATE(CODETESTER);
-             */
+
+            FormModel updatedModel = data.CopyInputs();
+
             try
-            {
-                
+            {          
                 tester.Run();
-                updatedModel.Accuracy = tester.Accuracy.ToString() + "%";
-                updatedModel.Results = tester.Results;
-                updatedModel.UserMessage = "Code was compiled and executed successfully.";
-                updatedModel.TestArguments = tester.TestArguments;
-                updatedModel.Times = tester.Times;
+                updatedModel.AddResults(tester);
             }
             catch (Exception e)
             {
                 updatedModel.UserMessage = e.Message;
             }
 
-
+            // pad the input/output data with empty strings incase it is insufficient for min table size
             updatedModel.PadData();
-
 
             return View(updatedModel);
         }

@@ -27,17 +27,41 @@ namespace AlgorithmTester.Models
             set { _numData = value; }
         }
         public string UserMessage { get; set; }
+
         public FormModel()
         {
             // values to populate initial table
-            Code = "public class Solution {\n\tpublic static int Algorithm(int n)\n\t{\n\t\t//Enter code here\n\t\treturn 0;\n\t}\n}";
-            InputData = new List<string>() { "", "", "" };
-            OutputData = new List<string>() { "", "", "" };
-            Results = new List<string>() { "", "", "" };
-            Accuracy = "";
-            UserMessage = String.Empty;
+            this.Code = "public class Solution {\n\tpublic static int Algorithm(int n)\n\t{\n\t\t//Enter code here\n\t\treturn 0;\n\t}\n}";
+            this.InputData = new List<string>() { "", "", "" };
+            this.OutputData = new List<string>() { "", "", "" };
+            this.Results = new List<string>() { "", "", "" };
+            this.Accuracy = "";
+            this.UserMessage = String.Empty;
+           
         }
 
+
+        public void AddResults(CodeTester tester)
+        {
+            this.Accuracy = tester.Accuracy.ToString() + "%";
+            this.Results = tester.Results;
+            this.UserMessage = "Code was compiled and executed successfully.";
+            this.TestArguments = tester.TestArguments;
+            this.Times = tester.Times;
+        }
+
+        /*
+         * Returns a new FormModel object with a copy of the user inputted values
+         */
+        public FormModel CopyInputs()
+        {
+            return new FormModel
+            {
+                Code = this.Code,
+                InputData = this.InputData,
+                OutputData = this.OutputData,
+            };
+        }
 
         public void PadData()
         {
@@ -70,10 +94,8 @@ namespace AlgorithmTester.Models
                 for (int i = 0; i < InputData.Count; i++)
                 {
                     Debug.WriteLine("input " + (i + 1) + ": " + InputData[i]);
-                }
-                for (int i = 0; i < OutputData.Count; i++)
-                {
                     Debug.WriteLine("output " + (i + 1) + ": " + OutputData[i]);
+                    Debug.WriteLine("results " + (i + 1) + ": " + Results[i]);
                 }
                 Debug.WriteLine("Numer of data sets: " + NumData);
 

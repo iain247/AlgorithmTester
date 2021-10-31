@@ -36,6 +36,12 @@ namespace AlgorithmTester.Models
                     correctAnswers.Add("Invalid Input");
                     continue;
                 }
+                // check to see if the output has been tagged as timing out
+                else if (CalculatedOutput[i].Equals("Timeout"))
+                {
+                    correctAnswers.Add("Timeout");
+                    continue;
+                }
 
                 // otherwise try casting the output
                 // first try casting the user supplied output to the appropriate type

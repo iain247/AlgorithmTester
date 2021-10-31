@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Threading;
+using System.Management;
 
 namespace AlgorithmTester.Models
 {
@@ -11,6 +13,7 @@ namespace AlgorithmTester.Models
     {
         public FileHandler FH { get; set; }
         public InputParser IP { get; set; }
+        public const int MaxExecutionTime = 10000;
 
         public CodeCompiler(InputParser ip)
         {
@@ -18,37 +21,10 @@ namespace AlgorithmTester.Models
             this.FH = new FileHandler(ip);
         }
 
-        public List<string> CMDRun(List<IOData> DataSets)
+        public void Compile()
         {
             FH.CreateTempCSFile();
 
-            Compile();
-
-            var codeOutput = new List<string>();
-            foreach(IOData dataSet in DataSets)
-            {
-                string output;
-                if (IP.CheckArguments(dataSet))
-                {
-                    string argumentsString = dataSet.GetCommandLineArguments();
-                    output = RunExecutable(argumentsString);
-                }
-                else
-                {
-                    output = "InvalidInput";
-                }
-                
-                codeOutput.Add(output);
-            }
-            
-            // delete all the newly created files
-            //FH.DeleteAllFiles();
-
-            return codeOutput;
-        }
-
-        private void Compile()
-        {
             ProcessStartInfo ps = new ProcessStartInfo
             {
                 FileName = "cmd.exe",
@@ -69,8 +45,8 @@ namespace AlgorithmTester.Models
         /*
          *  TRY THIS FOR THE SPEED CHECKS
          */
-    
-        public string RunExecutable(string arguments)
+
+        public Task<string> RunExecutable(string arguments)
         {
             ProcessStartInfo ps = new ProcessStartInfo
             {
@@ -84,13 +60,40 @@ namespace AlgorithmTester.Models
             Debug.WriteLine(ps.Arguments);
 
             Process proc = Process.Start(ps);
-            string output = proc.StandardOutput.ReadToEnd();
-            proc.WaitForExit();
-            Debug.WriteLine("output: " + output);
 
-            return output;
+            // if the process has not finished within a certain time, abort the process
+            Timer timer = new Timer(_ => KillAllProcesses(proc.Id), null, 10000, -1);
+
+            return proc.StandardOutput.ReadLineAsync();
+          
         }
 
+        public void KillAllProcesses(int processId)
+        {
+            Debug.WriteLine("killing process");
+            ManagementObjectSearcher processSearcher = new ManagementObjectSearcher
+                ("Select * From Win32_Process Where ParentProcessID=" + processId);
+            ManagementObjectCollection processCollection = processSearcher.Get();
+
+            try
+            {
+                Process proc = Process.GetProcessById(processId);
+                if (!proc.HasExited) proc.Kill();
+            }
+            catch (ArgumentException)
+            {
+                // Process already exited.
+            }
+
+            if (processCollection != null)
+            {
+                foreach (ManagementObject mo in processCollection)
+                {
+                    KillAllProcesses(Convert.ToInt32(mo["ProcessID"])); //kill child processes(also kills childrens of childrens etc.)
+                }
+                
+            }
+        }
 
         public void CheckCompilation(string compilationOutput)
         {
@@ -127,8 +130,16 @@ namespace AlgorithmTester.Models
 
         public void DeleteAllFiles()
         {
-            File.Delete(FH.GetExecutable());
-            File.Delete(FH.FileName);
+            try
+            {
+                File.Delete(FH.GetExecutable());
+                File.Delete(FH.FileName);
+            }
+            catch(Exception)
+            {
+                Debug.WriteLine("Files could not be deleted");
+            }
+            
         }
 
     }
@@ -138,5 +149,13 @@ namespace AlgorithmTester.Models
 
         public CompilationErrorException(string error)
             : base("Compilation error:\n" + error) { }
+    }
+
+    public class ExecutionErrorException : Exception
+    {
+        public ExecutionErrorException() { }
+
+        public ExecutionErrorException(string error)
+            : base("Execution error:\n" + error) { }
     }
 }

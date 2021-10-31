@@ -23,7 +23,7 @@ namespace AlgorithmTester.Models
         public int NumOfArguments { get; set; }
 
         public static readonly string[] AllowedIdentifiers = new string[] { "bool", "byte", "sbyte", "char", "decimal", "double",
-                "float", "int", "uint", "long", "ulong", "short", "ushort", "string"};
+                "float", "int", "uint", "long", "ulong", "short", "ushort", "string", "int[]"};
 
 
         public InputParser(String code, List<string> input, List<string> output)
@@ -102,36 +102,6 @@ namespace AlgorithmTester.Models
             }
             return true;        
         }
-
-        /*
-         * This checks a single string of comma seperated arguments and returns true if the inputs are valid
-         * DECIDED NOT TO USE THIS AS THE INPUTS WONT BE WRONG. IF THEY ARE, ITS DUE TO USER ERROR AND AN EXCEPTION
-         * WILL BE THROWN EARLIER IN THE PROGRAMME.
-         */
-        //public bool CheckArguments(string argumentString)
-        //{
-        //    // split argument string into comma seperated values to get each argument
-        //    string[] arguments = argumentString.Split(',').Select(arguments => arguments.Trim()).ToArray();
-
-
-        //    // check the number of arguments
-        //    if (arguments.Length != NumOfArguments)
-        //        return false;
-
-        //    // try cast each input to the appropriate type, if it can't be done return false
-        //    for (int i = 0; i < NumOfArguments; i++)
-        //    {
-        //        try
-        //        {
-        //            TypeConverter.Cast(arguments[i], ArgumentTypes[i]);
-        //        }
-        //        catch (Exception)
-        //        {
-        //            return false;
-        //        }
-        //    }
-        //    return true;
-        //}
 
         /*
          * This method extracts the return type from the user supplied code

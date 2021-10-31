@@ -1,8 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "0rmnJYAPeZ73Ec8RSU1wJMBvNo1RJIGr+9gPJnSPG1SJzwIiNitMV8DeTO45m2tjUJRv/Sjjn7LREG6Pw2TN2w==",
+  "dgSpecHash": "PQCo8EOlXCTD6Mze83vneNLqUS78kwOdc30JOEjQ9KJG/RAWj2Rvc8A8yS4KB9D1DxkG+5HAPqvasoCrI7trBw==",
   "success": true,
   "projectFilePath": "C:\\Users\\iainr\\Documents\\repos\\AlgorithmTester\\AlgorithmTester.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\iainr\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+    "C:\\Users\\iainr\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
+    "C:\\Users\\iainr\\.nuget\\packages\\system.codedom\\5.0.0\\system.codedom.5.0.0.nupkg.sha512",
+    "C:\\Users\\iainr\\.nuget\\packages\\system.management\\5.0.0\\system.management.5.0.0.nupkg.sha512",
+    "C:\\Users\\iainr\\.nuget\\packages\\system.security.accesscontrol\\5.0.0\\system.security.accesscontrol.5.0.0.nupkg.sha512",
+    "C:\\Users\\iainr\\.nuget\\packages\\system.security.principal.windows\\5.0.0\\system.security.principal.windows.5.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

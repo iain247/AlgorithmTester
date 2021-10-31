@@ -22,7 +22,8 @@ namespace AlgorithmTester.Models
                 {"ulong",  typeof(ulong)},
                 {"short",  typeof(short)},
                 {"ushort",  typeof(ushort)},
-                {"string", typeof(string)}
+                {"string", typeof(string)},
+                {"int[]", typeof(int[]) }
             };
 
         public static Type GetType(string identifier)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -26,7 +27,7 @@ namespace AlgorithmTester.Models
 
         private static readonly List<string> charValues = new List<string>()
         {
-            "a",
+            "a", "b", "c", "d", "e", "f"
         };
 
         private static readonly List<string> decimalValues = new List<string>()
@@ -98,6 +99,7 @@ namespace AlgorithmTester.Models
             {"short", shortValues },
             {"ushort", ushortValues },
             {"string", stringValues },
+            {"int[]", intValues } /// TEMPORARY FOR TESTING
         };
 
 
@@ -116,6 +118,37 @@ namespace AlgorithmTester.Models
             }
 
             return new IOData(arguments);
+        }
+
+        public static List<IOData> GenerateData(List<string> argumentTypes, List<string> argumentNames)
+        {
+            // get size of test data dictionaries
+            var sizes = new List<int>();
+            foreach (string type in argumentTypes)
+            {
+                sizes.Add(TestLists[type].Count);
+            }
+
+            // get minimum input size
+            int size = Enumerable.Min(sizes);
+
+            // create IOData list
+            var data = new List<IOData>();
+            for (int i=0; i<size; i++)
+            {
+                var arguments = new List<string>();
+                foreach (string argument in argumentTypes)
+                {
+                    var valueList = TestLists[argument];    // obtain the appropriate data list
+                    string argumentValue = valueList[i];    // retrieve the appropriately sized argument value
+                    arguments.Add(argumentValue);
+                }
+                IOData dataSet = new IOData(arguments);
+                dataSet.AddArgumentNames(argumentNames);
+                data.Add(dataSet);
+            }
+
+            return data;
         }
 
     }

@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Threading;
 
 namespace AlgorithmTester.Models
 {
     public class CodeTester
     {
-        // ALL VARIABLES NEEDED TO UPDATE THE VIEW SHOULD BE HELD HERE
-        // PROBABLY DONT NEED ALL THE ATTRIBUTES HERE NOW
-        // ALSO DONT NEED A ACCURACYCALCULATOR CLASS SINCE ALL IT DOES IS USE THE COMPARATOR
-        // THIS CLASS CAN USE THE COMPARATOR DIRECTLY
-
         public List<string> Results { get; set; }
         public double Accuracy { get; set; }
         public FormModel Model { get; set; }
@@ -33,15 +29,18 @@ namespace AlgorithmTester.Models
             // Parse the user's code
             ParseCode();
             // make a method for compiling
-            List<string> calculatedOutput = ExecuteCode();
+            CompileUserCode();
 
-            CalculateAccuracy(calculatedOutput);
+            
+            // calculate accuracy and speed asynchronously
+            Task t1 = CalculateAccuracy();
+            Task t2 = CalculateSpeed();
 
-            PrintOutput(calculatedOutput);
+            // after both tasks are finished, delete the created files
+            Task.WaitAll(t1, t2);
 
-            // make a separate method for finding speed
-            CalculateSpeed();
-
+            // sleep breifly to make sure the executable is not being used
+            Thread.Sleep(2000);
             Compiler.DeleteAllFiles();
         }
 
@@ -52,20 +51,18 @@ namespace AlgorithmTester.Models
             DataSets = IP.FindDataSets();
         }
 
-        public List<string> ExecuteCode()
+        public void CompileUserCode()
         {
             Compiler = new CodeCompiler(IP);
-
-            // compile and execute the program passing in the data from the table
-            var output = Compiler.CMDRun(DataSets);
-
-            return output;
+            Compiler.Compile();
         }
 
-        public void CalculateAccuracy(List<string> calculatedOutput)
+        public async Task CalculateAccuracy()
         {
+            // find the results of the code using the given inputs
+            List<string> calculatedOutput = await CalculateOutputs();
+
             // find the identifier (return type)
-            Debug.WriteLine("identifier: " + IP.Identifier);
             string identifier = IP.Identifier;
 
             IComparator comparator = AccuracyCalculatorFactory.Create(identifier, Model.OutputData, calculatedOutput);
@@ -76,18 +73,44 @@ namespace AlgorithmTester.Models
             Accuracy = Math.Round(Accuracy, 2);
         }
 
-        public void CalculateSpeed()
+        public async Task<List<string>> CalculateOutputs()
+        {
+            // execute the user's code using each set of IOData inputs
+            var codeOutput = new List<string>();
+            var tasks = new List<Task<string>>();
+            foreach (IOData dataSet in DataSets)
+            {
+                Task<string> executionTask = null;
+                if (IP.CheckArguments(dataSet))
+                {
+
+                    // get task which runs executable
+                    string argumentsString = dataSet.GetCommandLineArguments();
+                    executionTask = Compiler.RunExecutable(argumentsString);
+                }
+                else
+                {
+                    executionTask = Task.FromResult("InvalidInput");
+                }
+                tasks.Add(executionTask);
+            }
+
+            foreach (var output in await Task.WhenAll(tasks))
+            {
+              
+                // if the output is null, then the process was killed before it could complete
+                if (output is null) codeOutput.Add("Timeout");
+                else codeOutput.Add(output);
+            }
+            return codeOutput;
+        }
+
+
+        public async Task CalculateSpeed()
         {
             SpeedCalculator sc = new SpeedCalculator(Compiler);
-            TestArguments = sc.TestData;
-           
-            sc.CalculateTimes().Wait();
-            Times = sc.Times;
-            Debug.WriteLine("times should be calculated by now");
-            foreach (string time in sc.Times)
-            {
-                Debug.WriteLine("time:" + time);
-            }
+            TestArguments = sc.TestData;      
+            Times = await sc.CalculateTimes();
         }
 
         public void PrintOutput(List<string> output)
