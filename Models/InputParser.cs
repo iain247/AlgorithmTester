@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 namespace AlgorithmTester.Models
 {
@@ -23,7 +24,8 @@ namespace AlgorithmTester.Models
         public int NumOfArguments { get; set; }
 
         public static readonly string[] AllowedIdentifiers = new string[] { "bool", "byte", "sbyte", "char", "decimal", "double",
-                "float", "int", "uint", "long", "ulong", "short", "ushort", "string", "int[]"};
+                "float", "int", "uint", "long", "ulong", "short", "ushort", "string", "bool[]", "byte[]", "sbyte[]", "char[]", "decimal[]", "double[]",
+                "float[]", "int[]", "uint[]", "long[]", "ulong[]", "short[]", "ushort[]", "string[]" };
 
 
         public InputParser(String code, List<string> input, List<string> output)
@@ -89,18 +91,11 @@ namespace AlgorithmTester.Models
                 return false;
 
             // try cast each input to the appropriate type, if it can't be done return false
-            for (int i=0; i<NumOfArguments; i++)
+            for (int i = 0; i < NumOfArguments; i++)
             {
-                try
-                {
-                    TypeConverter.Cast(dataSet.InputData[i], ArgumentTypes[i]);
-                }
-                catch(Exception)
-                {
-                    return false;
-                }            
+                if (!TypeConverter.CheckCast(dataSet.InputData[i], ArgumentTypes[i])) return false;
             }
-            return true;        
+            return true;
         }
 
         /*
@@ -168,7 +163,9 @@ namespace AlgorithmTester.Models
                 string output = Output[i];
                 // split into comma seperated values and trim
                 // also convert to object list
-                List<string> inputArguments = inputSet.Split(',').Select(inputArguments => inputArguments.Trim()).ToList();
+                // DONT SPLIT BASED ON COMMAS, NEED TO FIND SPLIT ARRAYS
+                List<string> inputArguments = Regex.Split(inputSet, ",(?=[^\\]]*(?:\\[|$))").ToList<string>();
+                //List<string> inputArguments = inputSet.Split(',').Select(inputArguments => inputArguments.Trim()).ToList();
 
                 DataSets.Add(new Models.IOData(inputArguments, output));
             }

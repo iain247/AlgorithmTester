@@ -29,9 +29,9 @@ namespace AlgorithmTester.Controllers
         [HttpPost]
         public IActionResult Index(FormModel data)
         {
+            
             // delete the empty input values which may exist from the IO table
             data.DeleteEmptyData();
-
             // create a new testing object
             var tester = new CodeTester(data);
 
@@ -63,5 +63,7 @@ namespace AlgorithmTester.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+     
     }
 }

@@ -9,7 +9,7 @@ namespace AlgorithmTester.Models
 {
     public class SpeedCalculator
     {
-        public List<IOData> TestData { get; set; }
+        public List<TestingData> TestData { get; set; }
         public CodeCompiler Compiler { get; set; }
         public InputParser IP { get; set; }
         
@@ -27,7 +27,7 @@ namespace AlgorithmTester.Models
             var times = new List<string>();
 
             // create a task for each set of testing data
-            foreach (IOData arguments in TestData)
+            foreach (TestingData arguments in TestData)
             {
                 Task<double> executionTask = ExecuteAsync(arguments);
                 tasks.Add(executionTask);                   
@@ -35,7 +35,12 @@ namespace AlgorithmTester.Models
 
             foreach (var time in await Task.WhenAll(tasks))
             {
-                if (time < 0) times.Add("Timeout");
+                // if time exceeds max execution time, mark it as "timeout"
+                // the process stops after the max execution time, so time will only slightly exceed
+                if (time > CodeCompiler.MaxExecutionTime) times.Add("Timeout");
+                // time = -1 if there has been a runtime error
+                else if (time == -1) times.Add("Runtime Error");
+                // else add the time as normal
                 else times.Add(String.Format("{0}s", time / 1000.0));
             }
             
@@ -46,34 +51,23 @@ namespace AlgorithmTester.Models
         public async Task<double> ExecuteAsync(IOData arguments)
         {
             // initalise elapsed time as infinite
-            double elapsedTime = -1;
+            //double elapsedTime = -1;
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-
+            
             // run executable and obtain output
             string run = await Compiler.RunExecutable(arguments.GetCommandLineArguments());
-
+            // get elapsed time from stopwatch
             stopwatch.Stop();
+            double elapsedTime = stopwatch.ElapsedMilliseconds;
 
-            // executable returns null if it times out
-            if (!(run is null)) elapsedTime = stopwatch.ElapsedMilliseconds;
+            // if return type is less than max execution time and is null, there was a runtime error
+            if (String.IsNullOrEmpty(run) && elapsedTime < CodeCompiler.MaxExecutionTime)
+                elapsedTime = -1;
 
             // return the total number of milliseconds rounded to nearest value
             return Math.Round(elapsedTime);
-        }
-
-
-
-        public void GenerateTestData()
-        {
-            for (int i = 0; i < InputTestValues.TestValueSize; i++)
-            {
-                // find array of arguments
-                IOData data = InputTestValues.GenerateData(IP.ArgumentTypes, i);
-                data.AddArgumentNames(IP.ArgumentNames);
-                TestData.Add(data);
-            }
         }
     }
 }

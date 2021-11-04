@@ -13,7 +13,6 @@ namespace AlgorithmTester.Models
     {
         public List<string> InputData { get; set; }
         public string OutputData { get; set; }
-        public List<string> ArgumentNames { get; set; }
 
         public IOData(List<string> input, string output)
         {
@@ -26,10 +25,7 @@ namespace AlgorithmTester.Models
             this.InputData = input;
         }
 
-        public void AddArgumentNames(List<string> argumentNames)
-        {
-            this.ArgumentNames = argumentNames;
-        }
+        
 
         /*
          * Returns the input values separated by commas

@@ -18,7 +18,7 @@ namespace AlgorithmTester.Models
         public List<string> InputData { get; set; }
         public List<string> OutputData { get; set; }  
         public List<string> Results { get; set; }
-        public List<IOData> TestArguments { get; set; }
+        public List<TestingData> TestArguments { get; set; }
         public List<string> Times { get; set; }
         private int _numData;
         public int NumData
@@ -83,34 +83,6 @@ namespace AlgorithmTester.Models
             OutputData.RemoveAll(x => x is null);
             Results.RemoveAll(x => x is null);
             NumData -= count;
-        }
-
-        public void PrintValues()
-        {
-            Debug.WriteLine("code: " + Code);
-            try
-            {
-
-                for (int i = 0; i < InputData.Count; i++)
-                {
-                    Debug.WriteLine("input " + (i + 1) + ": " + InputData[i]);
-                    Debug.WriteLine("output " + (i + 1) + ": " + OutputData[i]);
-                    Debug.WriteLine("results " + (i + 1) + ": " + Results[i]);
-                }
-                Debug.WriteLine("Numer of data sets: " + NumData);
-
-            }
-            catch (System.NullReferenceException e)
-            {
-                Console.WriteLine(e.ToString());
-                Debug.WriteLine("no input/output data");
-            }
-            finally
-            {
-                Debug.WriteLine("accuracy: " + Accuracy);
-                Debug.WriteLine("speed: " + Speed);
-            }
-
         }
     }
 }

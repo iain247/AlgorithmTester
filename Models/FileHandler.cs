@@ -68,12 +68,36 @@ public class CodeRunner
     {
         " +
         GetCastingCode(variableNames, argumentTypes) + @"
-        System.Console.Write(Solution.Algorithm(" + GetArguments(variableNames) + @"));
+        Print(Solution.Algorithm(" + GetArguments(variableNames) + @"));
     }
     public static T GetTypeFromString<T> (string typeString)
     {
         var foo = System.ComponentModel.TypeDescriptor.GetConverter(typeof(T));
         return (T)(foo.ConvertFromInvariantString(typeString));
+    }
+    public static string[] ConvertStringToArray(string arrayString)
+    {
+        string allElements = arrayString.Replace(" + "\"[\", \"\").Replace(\"]\", \"\");" + @"
+        return allElements.Split(',');
+    }
+    public static T[] GetTypeFromArrayString<T>(string value)
+    {
+        if (value.Contains(" + "\"array_test-\"))" + @"
+            return new T[System.Int32.Parse(value.Substring(11))];
+        else
+            return System.Array.ConvertAll(ConvertStringToArray(value), i => GetTypeFromString<T>(i));
+    }
+    public static void Print(object value)
+    {
+        if (value.GetType().IsArray)
+        {
+            var array = value as System.Array;
+            string output = " + "\"[\";" + @"
+            foreach(var foo in array)
+                output += foo + " + "\",\";" + @"
+            System.Console.WriteLine(output.Substring(0, output.Length -1) + " + "\"]\");" + @"
+        }
+        else System.Console.WriteLine(value);          
     }
 }");
                 sw.Flush();
@@ -93,7 +117,13 @@ public class CodeRunner
             for (int i=0; i<argumentTypes.Count; i++)
             {
                 string type = argumentTypes[i];
-                castingCode += type + " " + variables[i] + " = GetTypeFromString<" + type + ">(args[" + i + "]); ";
+                if (CheckArray(type))
+                {
+                    //castingCode += type + " " + variables[i] + " = System.Array.ConvertAll(ConvertStringToArray(args[" + i + "]), foo => GetTypeFromString<" + GetElementType(type) + ">(foo));\n";
+                    castingCode += type + " " + variables[i] + " = GetTypeFromArrayString<" + GetElementType(type) + ">(args[" + i + "]);\n";
+                }
+                else
+                    castingCode += type + " " + variables[i] + " = GetTypeFromString<" + type + ">(args[" + i + "]);\n";
             }
 
             return castingCode;
@@ -129,6 +159,22 @@ public class CodeRunner
         public string GetExecutable()
         {
             return Path.ChangeExtension(FileName, ".exe");
+        }
+
+        /*
+         * Checks if the argument is an array
+         */
+        private bool CheckArray(string argument)
+        {
+            return (argument.Contains('[') && argument.Contains(']'));
+        }
+
+        /*
+         * Removes the square brackets from the type to get its element type
+         */
+        private string GetElementType(string argument)
+        {
+            return argument.Remove(argument.Length - 2);
         }
     }
 

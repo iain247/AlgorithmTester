@@ -17,7 +17,7 @@ namespace AlgorithmTester.Models
         public string UserMessage { get; set; }
         public CodeCompiler Compiler { get; set; }
         public List<string> Times { get; set; }
-        public List<IOData> TestArguments { get; set; }
+        public List<TestingData> TestArguments { get; set; }
 
         public CodeTester(FormModel model)
         {
@@ -30,7 +30,6 @@ namespace AlgorithmTester.Models
             ParseCode();
             // make a method for compiling
             CompileUserCode();
-
             
             // calculate accuracy and speed asynchronously
             Task t1 = CalculateAccuracy();
@@ -40,8 +39,8 @@ namespace AlgorithmTester.Models
             Task.WaitAll(t1, t2);
 
             // sleep breifly to make sure the executable is not being used
-            Thread.Sleep(2000);
-            Compiler.DeleteAllFiles();
+            //Thread.Sleep(2000);
+            //Compiler.DeleteAllFiles();
         }
 
         public void ParseCode()
@@ -65,7 +64,9 @@ namespace AlgorithmTester.Models
             // find the identifier (return type)
             string identifier = IP.Identifier;
 
-            IComparator comparator = AccuracyCalculatorFactory.Create(identifier, Model.OutputData, calculatedOutput);
+            //IComparator comparator = AccuracyCalculatorFactory.Create(identifier, Model.OutputData, calculatedOutput);
+
+            AccuracyCalculator comparator = new AccuracyCalculator(Model.OutputData, calculatedOutput, identifier);
 
 
             Results = comparator.FindResults();
@@ -84,9 +85,10 @@ namespace AlgorithmTester.Models
                 if (IP.CheckArguments(dataSet))
                 {
 
-                    // get task which runs executable
+                    // get arguments from the dataset
                     string argumentsString = dataSet.GetCommandLineArguments();
-                    executionTask = Compiler.RunExecutable(argumentsString);
+                    // run the executable with the correct arguments
+                    executionTask = ExecuteAsync(argumentsString);
                 }
                 else
                 {
@@ -97,19 +99,35 @@ namespace AlgorithmTester.Models
 
             foreach (var output in await Task.WhenAll(tasks))
             {
-              
-                // if the output is null, then the process was killed before it could complete
-                if (output is null) codeOutput.Add("Timeout");
+                // if the output is tagged as "timeout", then the process was killed before it could complete
+                if (output is "timeout") codeOutput.Add("Timeout");
+                // if the output is null, then the process resulted in an error
+                if (output is null) codeOutput.Add("RuntimeError");
                 else codeOutput.Add(output);
             }
             return codeOutput;
+        }
+
+        public async Task<string> ExecuteAsync(string arguments)
+        {
+            // run the executable with the given arguments
+            Task<string> run = Compiler.RunExecutable(arguments);
+            // check if the tasks completes before the max execution time
+            Task first = await Task.WhenAny(run, Task.Delay(CodeCompiler.MaxExecutionTime));
+
+            // if the delay finishes before the execution, mark as "timeout"
+            if (first.Id != run.Id)
+                return "timeout";
+            
+            // return the results of the executable
+            return run.Result;
         }
 
 
         public async Task CalculateSpeed()
         {
             SpeedCalculator sc = new SpeedCalculator(Compiler);
-            TestArguments = sc.TestData;      
+            TestArguments = sc.TestData;
             Times = await sc.CalculateTimes();
         }
 
