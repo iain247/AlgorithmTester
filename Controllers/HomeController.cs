@@ -20,9 +20,6 @@ namespace AlgorithmTester.Controllers
 
         public IActionResult Index()
         {
-            //ViewBag.Results = new List<string>() { "", "", "" };
-            //ViewBag.UserMessage = String.Empty;
-
             return View(new FormModel());
         }
 
@@ -32,25 +29,26 @@ namespace AlgorithmTester.Controllers
             
             // delete the empty input values which may exist from the IO table
             data.DeleteEmptyData();
+
             // create a new testing object
             var tester = new CodeTester(data);
 
-            FormModel updatedModel = data.CopyInputs();
-
             try
-            {          
+            { 
+                // run code tester to update form model
                 tester.Run();
-                updatedModel.AddResults(tester);
+                data.UserMessage = "Code was compiled and executed successfully.";
             }
             catch (Exception e)
             {
-                updatedModel.UserMessage = e.Message;
+                //updatedModel.UserMessage = e.Message;
+                data.UserMessage = e.Message;
             }
 
             // pad the input/output data with empty strings incase it is insufficient for min table size
-            updatedModel.PadData();
+            data.PadData();
 
-            return View(updatedModel);
+            return View(data);
         }
 
         public IActionResult Privacy()

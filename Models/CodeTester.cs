@@ -9,51 +9,47 @@ namespace AlgorithmTester.Models
 {
     public class CodeTester
     {
-        public List<string> Results { get; set; }
-        public double Accuracy { get; set; }
         public FormModel Model { get; set; }
         public InputParser IP { get; set; }
-        public List<IOData> DataSets { get; set; }
-        public string UserMessage { get; set; }
         public CodeCompiler Compiler { get; set; }
-        public List<string> Times { get; set; }
-        public List<TestingData> TestArguments { get; set; }
 
         public CodeTester(FormModel model)
         {
             this.Model = model;
+            this.IP = new InputParser(model.Code, model.InputData, model.OutputData);
+            this.Compiler = new CodeCompiler(IP.ArgumentTypes, IP.Code);
         }
         public void Run()
         {
 
             // Parse the user's code
-            ParseCode();
-            // make a method for compiling
-            CompileUserCode();
-            
-            // calculate accuracy and speed asynchronously
-            Task t1 = CalculateAccuracy();
+            IP.ParseCode();
+            // update argument names
+            Model.ArgumentNames = IP.ArgumentNames;
+
+            // compile the user's code
+            Compiler.Compile();
+
+            // attempt to calculate accuracy
+            Task t1 = null;
+            try 
+            {
+                t1 = CalculateAccuracy();
+            }
+            catch(InvalidDataException e)
+            {
+                Model.UserMessage = e.Message;
+            }
+
+            // calculate speed
             Task t2 = CalculateSpeed();
 
             // after both tasks are finished, delete the created files
             Task.WaitAll(t1, t2);
 
             // sleep breifly to make sure the executable is not being used
-            //Thread.Sleep(2000);
-            //Compiler.DeleteAllFiles();
-        }
-
-        public void ParseCode()
-        {
-            IP = new InputParser(Model.Code, Model.InputData, Model.OutputData);
-            IP.ParseCode();
-            DataSets = IP.FindDataSets();
-        }
-
-        public void CompileUserCode()
-        {
-            Compiler = new CodeCompiler(IP);
-            Compiler.Compile();
+            Thread.Sleep(100);
+            Compiler.DeleteAllFiles();
         }
 
         public async Task CalculateAccuracy()
@@ -64,14 +60,14 @@ namespace AlgorithmTester.Models
             // find the identifier (return type)
             string identifier = IP.Identifier;
 
-            //IComparator comparator = AccuracyCalculatorFactory.Create(identifier, Model.OutputData, calculatedOutput);
+            Comparator comparator = AccuracyCalculatorFactory.Create(Model.OutputData, calculatedOutput, identifier);
 
-            AccuracyCalculator comparator = new AccuracyCalculator(Model.OutputData, calculatedOutput, identifier);
+            //AccuracyCalculator comparator = new AccuracyCalculator(Model.OutputData, calculatedOutput, identifier);
 
 
-            Results = comparator.FindResults();
-            Accuracy = comparator.CalculateAccuracy(Results);
-            Accuracy = Math.Round(Accuracy, 2);
+            Model.Results = comparator.FindResults();
+            double accuracy = comparator.CalculateAccuracy(Model.Results);
+            Model.Accuracy = Math.Round(accuracy, 2).ToString() + "%";
         }
 
         public async Task<List<string>> CalculateOutputs()
@@ -79,12 +75,13 @@ namespace AlgorithmTester.Models
             // execute the user's code using each set of IOData inputs
             var codeOutput = new List<string>();
             var tasks = new List<Task<string>>();
-            foreach (IOData dataSet in DataSets)
+
+            // loop through the datasets
+            foreach (var dataSet in IP.DataSets)
             {
-                Task<string> executionTask = null;
+                Task<string> executionTask;
                 if (IP.CheckArguments(dataSet))
                 {
-
                     // get arguments from the dataset
                     string argumentsString = dataSet.GetCommandLineArguments();
                     // run the executable with the correct arguments
@@ -126,9 +123,9 @@ namespace AlgorithmTester.Models
 
         public async Task CalculateSpeed()
         {
-            SpeedCalculator sc = new SpeedCalculator(Compiler);
-            TestArguments = sc.TestData;
-            Times = await sc.CalculateTimes();
+            SpeedCalculator sc = new SpeedCalculator(Compiler, IP.ArgumentTypes, IP.ArgumentNames);
+            Model.TestArguments = sc.TestData;
+            Model.Times = await sc.CalculateTimes();
         }
 
         public void PrintOutput(List<string> output)
@@ -137,7 +134,7 @@ namespace AlgorithmTester.Models
             {
                 Debug.Write("result: " + output[i]);
                 Debug.Write(" expected result: " + Model.OutputData[i]);
-                Debug.WriteLine(" final result: " + Results[i]);
+                Debug.WriteLine(" final result: " + Model.Results[i]);
             }
         }
     }

@@ -47,7 +47,6 @@ $(document).ready(function () {
             tableSize++;
         }
         rowNum++;
-        //alert("tableSize: " + tableSize + " rowNum: " + rowNum);
     });
 
     /*
@@ -96,14 +95,15 @@ $(document).ready(function () {
     $("#code-input").keydown(function (e) {
         if (e.keyCode == 9) {
             e.preventDefault();
+            let textArea = $("#code-input");
             // get position of cursor
             let caretPos = document.getElementById("code-input").selectionStart;
             // get text from textarea
-            let x = $("#code-input").val();
+            let x = textArea.val();
             // insert tab at cursor position
-            $('#code-input').val(x.slice(0, caretPos) + "\t" + x.slice(caretPos));
-            // move cursor back to original position
-
+            textArea.val(x.slice(0, caretPos) + "\t" + x.slice(caretPos));
+            // move cursor to after tab position
+            textArea.prop('selectionEnd', caretPos + 1);
         }
     })
 });

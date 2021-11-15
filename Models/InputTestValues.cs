@@ -7,21 +7,8 @@ using System.Threading.Tasks;
 
 namespace AlgorithmTester.Models
 {
-    public class InputTestValues
+    public static class InputTestValues
     {
-        public List<string> ArgumentTypes { get; set; }
-        public List<string> ArgumentNames { get; set; }
-        //public readonly Dictionary<string, List<TestArgument>> TestLists;
-
-        public InputTestValues(List<string> argumentTypes, List<string> argumentNames)
-        {
-            this.ArgumentTypes = argumentTypes;
-            this.ArgumentNames = argumentNames;
-            /*
-            * Dictionary for retrieving the appropriate values based on a string representation of type
-            */
-        }
-
         public static List<TestingData> GenerateData(List<string> argumentTypes, List<string> argumentNames)
         {
             // get size of test data dictionaries
@@ -47,7 +34,6 @@ namespace AlgorithmTester.Models
 
                 // create a test data object             
                 TestingData dataSet = new TestingData(testArguments);
-                dataSet.AddArgumentNames(argumentNames);
                 data.Add(dataSet);
 
             }
@@ -223,7 +209,7 @@ namespace AlgorithmTester.Models
             new TestArgument("string", 10000), new TestArgument("string", 100000), new TestArgument("string", 1000000)
         };
 
-        public static readonly Dictionary<string, List<TestArgument>> TestLists = new Dictionary<string, List<TestArgument>>()
+        private static readonly Dictionary<string, List<TestArgument>> TestLists = new Dictionary<string, List<TestArgument>>()
         {
             {"bool", boolValues },
             {"byte", byteValues },

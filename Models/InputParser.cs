@@ -20,6 +20,7 @@ namespace AlgorithmTester.Models
         public List<string> Output { get; set; }
         public List<string> ArgumentTypes { get; set; }
         public List<string> ArgumentNames { get; set; }
+        public List<IOData> DataSets { get; set; }
         public string Identifier { get; set; }
         public int NumOfArguments { get; set; }
 
@@ -35,6 +36,7 @@ namespace AlgorithmTester.Models
             this.Output = output;
             this.ArgumentTypes = new List<string>();
             this.ArgumentNames = new List<string>();
+            this.DataSets = new List<IOData>();
         }
 
         public void ParseCode()
@@ -43,9 +45,10 @@ namespace AlgorithmTester.Models
             FindMethodHeader();
             FindIdentifier();
             FindArguments();
+            FindDataSets();
         }
 
-        public void CheckClassHeader()
+        private void CheckClassHeader()
         {
             // check for the correct class header
             using StringReader sr = new StringReader(Code);
@@ -61,7 +64,7 @@ namespace AlgorithmTester.Models
             while (!ClassHeader.Contains("public class Solution"));
         }
 
-        public void FindMethodHeader()
+        private void FindMethodHeader()
         {
             // check for the algorithm method
             using StringReader sr = new StringReader(Code);
@@ -101,7 +104,7 @@ namespace AlgorithmTester.Models
         /*
          * This method extracts the return type from the user supplied code
          */
-        public void FindIdentifier()
+        private void FindIdentifier()
         {
             string[] methodHeaderWords = MethodHeader.Split(' ').Select(MethodHeaderWords => MethodHeaderWords.Trim()).ToArray();
 
@@ -116,7 +119,7 @@ namespace AlgorithmTester.Models
         /*
          * Finds the type of each argument required by the user supplied code and returns them in a list
          */
-        public void FindArguments()
+        private void FindArguments()
         {
             // extract the arguments from the method header by finding substring between brackets
             int argumentsStartIndex = MethodHeader.IndexOf('(');
@@ -149,28 +152,20 @@ namespace AlgorithmTester.Models
         /*
          * This method uses the input and output data to create a list of IOData objects representing the tabulated input/output data
          */
-        public List<IOData> FindDataSets()
+        private void FindDataSets()
         {
-            // loop through input or output
-            // create IOData objects for each data set
-            List<IOData> DataSets = new List<IOData>();
-
-            if (Input.Count()==0) throw new InvalidDataException("No data supplied");
-
+            // loop through input and output
             for (int i=0; i<Input.Count; i++)
             {
                 string inputSet = Input[i];
                 string output = Output[i];
-                // split into comma seperated values and trim
-                // also convert to object list
-                // DONT SPLIT BASED ON COMMAS, NEED TO FIND SPLIT ARRAYS
+
+                // split input into separate arguments
                 List<string> inputArguments = Regex.Split(inputSet, ",(?=[^\\]]*(?:\\[|$))").ToList<string>();
-                //List<string> inputArguments = inputSet.Split(',').Select(inputArguments => inputArguments.Trim()).ToList();
+
 
                 DataSets.Add(new Models.IOData(inputArguments, output));
             }
-
-            return DataSets;
         }
 
     }

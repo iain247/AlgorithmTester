@@ -14,13 +14,13 @@ namespace AlgorithmTester.Models
     {
         public string FileName { get; set; }
         public string Code { get; set; }
-        public InputParser IP { get; set; }
+        public List<string> ArgumentTypes { get; set; }
 
 
-        public FileHandler(InputParser ip)
+        public FileHandler(List<string> argumentTypes, string code)
         {
-            this.IP = ip;
-            this.Code = ip.Code;
+            this.ArgumentTypes = argumentTypes;
+            this.Code = code;
             this.FileName = string.Empty;
         }
 
@@ -41,7 +41,7 @@ namespace AlgorithmTester.Models
                 //FileInfo fileInfo = new FileInfo(FileName);
                 //fileInfo.Attributes = FileAttributes.Temporary;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Debug.WriteLine("Cannot create file");
             }
@@ -52,10 +52,9 @@ namespace AlgorithmTester.Models
         /* This method writes the user supplied code to the new file.
          * It adds additional code to allow the user's code to be run
          */
-        public void UpdateTempFile()
+        private void UpdateTempFile()
         {
-            List<string> argumentTypes = IP.ArgumentTypes;
-            char[] variableNames = GenerateVariableNames(argumentTypes.Count);
+            char[] variableNames = GenerateVariableNames(ArgumentTypes.Count);
             try
             {
                 StreamWriter sw = File.AppendText(FileName);
@@ -67,7 +66,7 @@ public class CodeRunner
     public static void Main(string[] args)
     {
         " +
-        GetCastingCode(variableNames, argumentTypes) + @"
+        GetCastingCode(variableNames, ArgumentTypes) + @"
         Print(Solution.Algorithm(" + GetArguments(variableNames) + @"));
     }
     public static T GetTypeFromString<T> (string typeString)
@@ -103,14 +102,14 @@ public class CodeRunner
                 sw.Flush();
                 sw.Close();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Debug.WriteLine("Cannot write to file");
             }
         }
 
 
-        public string GetCastingCode(char[] variables, List<string> argumentTypes)
+        private string GetCastingCode(char[] variables, List<string> argumentTypes)
         {
             string castingCode = string.Empty;
 
@@ -119,7 +118,6 @@ public class CodeRunner
                 string type = argumentTypes[i];
                 if (CheckArray(type))
                 {
-                    //castingCode += type + " " + variables[i] + " = System.Array.ConvertAll(ConvertStringToArray(args[" + i + "]), foo => GetTypeFromString<" + GetElementType(type) + ">(foo));\n";
                     castingCode += type + " " + variables[i] + " = GetTypeFromArrayString<" + GetElementType(type) + ">(args[" + i + "]);\n";
                 }
                 else
@@ -129,11 +127,10 @@ public class CodeRunner
             return castingCode;
         }
 
-        public char[] GenerateVariableNames(int n)
+        private char[] GenerateVariableNames(int n)
         {
             var variables = new char[n];
 
-            Random random = new Random();
             const string characters = "abcdefghjijklmnopqrstuvwxyz";
 
             try
@@ -143,7 +140,7 @@ public class CodeRunner
                     variables[i] = characters[i];
                 }
             }
-            catch(IndexOutOfRangeException e)
+            catch(IndexOutOfRangeException)
             {
                 Debug.WriteLine("Too many input variables");
             }
@@ -151,7 +148,7 @@ public class CodeRunner
             return variables;
         }
 
-        public string GetArguments(char[] variableNames)
+        private string GetArguments(char[] variableNames)
         {
             return string.Join(',', variableNames);
         }

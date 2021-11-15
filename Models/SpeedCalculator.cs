@@ -11,14 +11,12 @@ namespace AlgorithmTester.Models
     {
         public List<TestingData> TestData { get; set; }
         public CodeCompiler Compiler { get; set; }
-        public InputParser IP { get; set; }
-        
 
-        public SpeedCalculator(CodeCompiler c)
+
+        public SpeedCalculator(CodeCompiler c, List<string> argumentTypes, List<string> argumentNames)
         {      
             this.Compiler = c;
-            this.IP = c.IP;
-            this.TestData = InputTestValues.GenerateData(IP.ArgumentTypes, IP.ArgumentNames);
+            this.TestData = InputTestValues.GenerateData(argumentTypes, argumentNames);
         }
 
         public async Task<List<string>> CalculateTimes()
@@ -48,7 +46,7 @@ namespace AlgorithmTester.Models
         }
 
 
-        public async Task<double> ExecuteAsync(IOData arguments)
+        public async Task<double> ExecuteAsync(TestingData arguments)
         {
             // initalise elapsed time as infinite
             //double elapsedTime = -1;

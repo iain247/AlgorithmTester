@@ -35,9 +35,5 @@ namespace AlgorithmTester.Models
             return string.Join(' ', InputData);
         }
 
-        public string ShowAllInputs()
-        {
-            return string.Join(',', InputData);
-        }
     }
 }

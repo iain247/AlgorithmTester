@@ -12,13 +12,11 @@ namespace AlgorithmTester.Models
     public class CodeCompiler
     {
         public FileHandler FH { get; set; }
-        public InputParser IP { get; set; }
         public const int MaxExecutionTime = 10000;
 
-        public CodeCompiler(InputParser ip)
+        public CodeCompiler(List<string> argumentTypes, string code)
         {
-            this.IP = ip;
-            this.FH = new FileHandler(ip);
+            this.FH = new FileHandler(argumentTypes, code);
         }
 
         public void Compile()

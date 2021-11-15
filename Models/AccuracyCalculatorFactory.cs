@@ -7,26 +7,40 @@ namespace AlgorithmTester.Models
 {
     public class AccuracyCalculatorFactory
     {
-        //public static IComparator Create(string identifier, List<string> correctOutputStrings, List<string> calculatedOutputStrings)
-        //{
-        //    //var ComparatorConstructor = new Dictionary<string, IComparator>()
-        //    //{
-        //    //    {"bool",  new AccuracyCalculator<bool>(correctOutputStrings, calculatedOutputStrings)},
-        //    //    {"byte",  new AccuracyCalculator<byte>(correctOutputStrings, calculatedOutputStrings)},
-        //    //    {"sbyte",  new AccuracyCalculator<sbyte>(correctOutputStrings, calculatedOutputStrings)},
-        //    //    {"char", new AccuracyCalculator<char>(correctOutputStrings, calculatedOutputStrings)},
-        //    //    {"decimal",  new AccuracyCalculator<decimal>(correctOutputStrings, calculatedOutputStrings)},
-        //    //    {"double",  new AccuracyCalculator<double>(correctOutputStrings, calculatedOutputStrings)},
-        //    //    {"float",  new AccuracyCalculator<float>(correctOutputStrings, calculatedOutputStrings)},
-        //    //    {"int",  new AccuracyCalculator<int>(correctOutputStrings, calculatedOutputStrings)},
-        //    //    {"uint",  new AccuracyCalculator<uint>(correctOutputStrings, calculatedOutputStrings)},
-        //    //    {"long",  new AccuracyCalculator<long>(correctOutputStrings, calculatedOutputStrings)},
-        //    //    {"ulong",  new AccuracyCalculator<ulong>(correctOutputStrings, calculatedOutputStrings)},
-        //    //    {"short",  new AccuracyCalculator<short>(correctOutputStrings, calculatedOutputStrings)},
-        //    //    {"ushort",  new AccuracyCalculator<ushort>(correctOutputStrings, calculatedOutputStrings)},
-        //    //    {"string",  new AccuracyCalculator<string>(correctOutputStrings, calculatedOutputStrings)}
-        //    //};
-        //    //return ComparatorConstructor[identifier];
-        //}
+        public static Comparator Create(List<string> correctOutputStrings, List<string> calculatedOutputStrings, string type)
+        {
+            var ComparatorConstructor = new Dictionary<string, Comparator>()
+            {
+                {"bool",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"byte",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"sbyte",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"char", new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"decimal",  new FloatAccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"double",  new FloatAccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"float",  new FloatAccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"int",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"uint",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"long",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"ulong",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"short",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"ushort",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"string",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"bool[]",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"byte[]",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"sbyte[]",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"char[]", new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"decimal[]",  new FloatAccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"double[]",  new FloatAccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"float[]",  new FloatAccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"int[]",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"uint[]",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"long[]",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"ulong[]",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"short[]",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"ushort[]",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)},
+                {"string[]",  new AccuracyCalculator(correctOutputStrings, calculatedOutputStrings, type)}
+            };
+            return ComparatorConstructor[type];
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace AlgorithmTester.Models
 {
     public static class TypeConverter
     {
-        public static readonly Dictionary<string, Type> TypeDict = new Dictionary<string, Type>()
+        private static readonly Dictionary<string, Type> TypeDict = new Dictionary<string, Type>()
             {
                 {"bool",  typeof(bool)},
                 {"byte",  typeof(byte)},
@@ -79,7 +79,7 @@ namespace AlgorithmTester.Models
         {
             var list = new T[values.Length];
 
-            for (int i=0; i<values.Count(); i++)
+            for (int i = 0; i < values.Count(); i++)
             {
                 T castValue = GetTypeFromString<T>(values[i]);
                 list[i] = castValue;
@@ -119,7 +119,7 @@ namespace AlgorithmTester.Models
                         System.Diagnostics.Debug.WriteLine("value in valuearray: " + s);
                     }
                     
-                    System.Array.ConvertAll(valueArray, foo => Convert.ChangeType(foo, type.GetElementType()));
+                    Array.ConvertAll(valueArray, foo => Convert.ChangeType(foo, type.GetElementType()));
                     return true;
                 }
             }
