@@ -15,14 +15,13 @@ namespace AlgorithmTester.Models
         public override bool AreEqual(string correct, string calculated)
         {
             // if array string detected, convert and check each value
-            System.Diagnostics.Debug.WriteLine("comparing floats");
             if (correct.Contains("["))
             {
-                Array.ConvertAll(ConvertStringToArray(correct), i => Convert.ToDouble(i));
-                Array.ConvertAll(ConvertStringToArray(calculated), i => Convert.ToDouble(i));
-                for (int i=0; i<correct.Length; i++)
+                var correctArray = Array.ConvertAll(ConvertStringToArray(correct), i => Convert.ToDouble(i));
+                var calculatedArray = Array.ConvertAll(ConvertStringToArray(calculated), i => Convert.ToDouble(i));
+                for (int i=0; i<correctArray.Length; i++)
                 {
-                    if (!Compare(correct[i], calculated[i])) return false;
+                    if (!Compare(correctArray[i], calculatedArray[i])) return false;
                 }
                 return true;
             }

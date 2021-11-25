@@ -55,7 +55,8 @@
 
         <!-- Attach the number of rows from the model to a div to be accessed by javascript -->
         <div id="rowNum" data-name="@(Model.NumData + 1)"></div>
-        <div>
+
+        <div id="data-container">
             <table class="table table-striped" id="data-table">
                 <thead>
                     <tr>
@@ -71,7 +72,7 @@
                         for (int i = 0; i < Model.InputData.Count; i++)
                         {
                             <tr>
-                                <th scope="row">@(i+1)</th>
+                                <th scope="row">@(i + 1)</th>
                                 <td>@Model.InputData[i]<input type="hidden" name="InputData[]" value="@Model.InputData[i]" /></td>
                                 <td>@Model.OutputData[i]<input type="hidden" name="OutputData[]" value="@Model.OutputData[i]" /></td>
                                 <td>@Model.Results[i]</td>
@@ -88,37 +89,54 @@
                     }
                 </tbody>
             </table>
-        </div>
 
-        <div>
-            <input type="submit" value="Go" class="btn btn-success btn-lg btn-block" id="go" />
-            <div class="form-group row" id="output">
-                <label class="col-sm-2 col-form-label" for="accuracy">Accuracy</label>
-                <input class="col-sm-4 form-control" type="text" id="accuracy" name="Accuracy" value="@Model.Accuracy" readonly />
-                <label class="col-sm-2 col-form-label" for="speed">Speed</label>
-                <input class="col-sm-4 form-control" type="text" id="speed" name="Speed" readonly />
+            <div class="input-group input-group-sm" id="timeout">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Time Limit (s)</span>
+                </div>
+                <input class="form-control" type="number" name="Timeout" min="1" max="600" value="@Model.Timeout" />
             </div>
         </div>
 
-        @{
-            if (!(Model.Times is null))
-            {
-                <table class="table table-sm table-bordered" id="speed-table">
-                    <thead>
-                        <tr>
-                            <th scope="col" colspan="@Model.ArgumentNames.Count">Testing Arguments</th>
-                            <th scope="col" rowspan="2">Times</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            @{
-                                for (int i = 0; i < Model.ArgumentNames.Count; i++)
-                                {
-                                    <th scope="col">@Model.ArgumentNames[i]</th>
+        <input type="submit" value="Go" class="btn btn-success btn-lg btn-block" id="go" />
+
+        <div id="loading">
+            <img id="loading-image" src="images/loading.gif" alt="Loading..." />
+        </div>
+
+
+        <div id="results">
+
+            @{
+                if (!(String.IsNullOrEmpty(Model.Accuracy)))
+                {
+                    <div class="form-group row" id="output">
+                        <label class="col-sm-4 col-form-label" for="accuracy">Accuracy</label>
+                        <input class="col-sm-8 form-control" type="text" id="accuracy" name="Accuracy" value="@Model.Accuracy" readonly />
+
+                    </div>
+                }
+            }
+
+            @{
+                if (!(Model.Times is null))
+                {
+                    <table class="table table-sm table-bordered" id="speed-table">
+                        <thead>
+                            <tr>
+                                <th scope="col" colspan="@Model.ArgumentNames.Count">Testing Arguments</th>
+                                <th scope="col" rowspan="2">Times</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                @{
+                                    for (int i = 0; i < Model.ArgumentNames.Count; i++)
+                                    {
+                                        <th scope="col">@Model.ArgumentNames[i]</th>
+                                    }
                                 }
-                            }
-                        </tr>
+                            </tr>
                             @{
                                 for (int i = 0; i < Model.Times.Count; i++)
                                 {
@@ -133,10 +151,13 @@
                                     </tr>
                                 }
                             }
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                }
             }
-        }
+        </div>
+
+
 
     </form>
 </div>

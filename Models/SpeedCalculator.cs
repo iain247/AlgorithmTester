@@ -35,7 +35,7 @@ namespace AlgorithmTester.Models
             {
                 // if time exceeds max execution time, mark it as "timeout"
                 // the process stops after the max execution time, so time will only slightly exceed
-                if (time > CodeCompiler.MaxExecutionTime) times.Add("Timeout");
+                if (time > Compiler.MaxExecutionTime) times.Add("Timeout");
                 // time = -1 if there has been a runtime error
                 else if (time == -1) times.Add("Runtime Error");
                 // else add the time as normal
@@ -61,7 +61,7 @@ namespace AlgorithmTester.Models
             double elapsedTime = stopwatch.ElapsedMilliseconds;
 
             // if return type is less than max execution time and is null, there was a runtime error
-            if (String.IsNullOrEmpty(run) && elapsedTime < CodeCompiler.MaxExecutionTime)
+            if (String.IsNullOrEmpty(run) && elapsedTime < Compiler.MaxExecutionTime)
                 elapsedTime = -1;
 
             // return the total number of milliseconds rounded to nearest value

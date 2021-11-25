@@ -1,7 +1,5 @@
 ﻿
-var defaultCode = "public class Solution {\n\tpublic static int Algorithm(int n)\n\t{\n\t\t//Enter code here\n\t\treturn 0;\n\t}\n}";
-
-//let tableSize = 3;
+var defaultCode = "public class Solution\n{\n\tpublic static int Algorithm(int n)\n\t{\n\t\t//Enter code here\n\t\treturn 0;\n\t}\n}";
 
 let minTableSize = 3;
 
@@ -10,12 +8,16 @@ function setTableSize(n) {
     return n-1;
 }
 
+/*
+   * show the loading gif until page loads
+   */
+//$(window).load(function () {
+//    
+//});
+
 
 $(document).ready(function () {
-    /*
-     * set the default code for c#
-     */
-    //$("#code-input").val(defaultCode);
+    $('#loading').hide();
 
     // set current row number and table size data
     let rowNum = $("#rowNum").data("name");
@@ -24,10 +26,10 @@ $(document).ready(function () {
     /*
      * function for modifying/appending table with input/output data
      */
-    $("#add-button").click(function () {
-        tableBody = $("#data-table tbody");
-        input = $("#input-arguments").val();
-        output = $("#output-arguments").val();
+    $("body").on("click", "#add-button", function () {
+        var tableBody = $("#data-table tbody");
+        var input = $("#input-arguments").val();
+        var output = $("#output-arguments").val();
         $("#input-arguments").val("");
         $("#output-arguments").val("");
 
@@ -35,11 +37,11 @@ $(document).ready(function () {
         if (input === "" || output === "") return;
 
         // add data to table with hidden input
-        rowData = "<tr><th scope=\"row\">" + rowNum + "</th><td>" + input + "<input type=\"hidden\" name=\"InputData[]\" value=\"" + input + "\"/></td><td>" +
+        var rowData = "<tr><th scope=\"row\">" + rowNum + "</th><td>" + input + "<input type=\"hidden\" name=\"InputData[]\" value=\"" + input + "\"/></td><td>" +
             output + "<input type=\"hidden\" name=\"OutputData[]\" value=\"" + output + "\"/></td><td></td><td><image class=\"delete-row\" src=\"images/delete.png\" " +
             "alt=\"delete\" /></td></tr>";
         if (rowNum <= tableSize) {
-            tr = $(this).parent();
+            var tr = $(this).parent();
             tableBody.children().eq(rowNum-1).replaceWith(rowData);
         }
         else { 
@@ -50,9 +52,19 @@ $(document).ready(function () {
     });
 
     /*
+     * add loading gif when go button is pressed and disabled textarea and add button
+     */
+    $("body").on("click", "#go", function () {
+        $('#loading').show();
+        $('#results').hide();
+        $("#code-input").prop("readonly", true);
+        $("#add-button").prop("disabled", true);
+    })
+
+    /*
      * function for reseting textarea to default class and method headers
      */
-    $("#reset").click(function () {
+    $("body").on("click", "#reset", function () {
         $("#code-input").val(defaultCode);
     })
 
@@ -61,28 +73,29 @@ $(document).ready(function () {
     */
     $("body").on("click", ".delete-row", function () {
 
-        row = $(this).parent().parent();
+        var row = $(this).parent().parent();
 
         // get the current row's row number
-        currentRow = row.find("th").html();
+        var currentRow = row.find("th").html();
+
+        
 
         // get the table body
-        tableBody = $("#data-table tbody");
+        var tableBody = $("#data-table tbody");
 
         // push each table row up by one to replace the deleted row
-        for (i = currentRow; i < tableSize; i++) {       
-            nextRow = tableBody.children().eq(i).html();
-            thisRow = tableBody.children().eq(i - 1).html(nextRow);
+        for (i = currentRow; i < tableSize; i++) {
+            var nextRow = tableBody.children().eq(i).html();
+            var thisRow = tableBody.children().eq(i - 1).html(nextRow);
             thisRow.find("th").html(i); // decrement table row number
-
         }
         // if table size is greater than minimum table size, delete the last row, otherwise append an empty row
         if (tableSize > minTableSize) {
-            $("table tr:last").remove();
+            $("#data-table tr:last").remove();
             tableSize--;
         } else {
-            rowData = "<th scope=\"row\">" + tableSize + "</th><td></td><td></td><td></td><td></td>"
-            finalRow = tableBody.children().eq(tableSize - 1).html(rowData);
+            var rowData = "<th scope=\"row\">" + tableSize + "</th><td></td><td></td><td></td><td></td>"
+            tableBody.children().eq(tableSize - 1).html(rowData);
         }
 
         rowNum--;

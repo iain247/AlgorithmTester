@@ -86,6 +86,10 @@ h5 {
     tab-size: 4;
 }
 
+#code-input[readonly] {
+    background-color: white;
+}
+
 #user-message {
     height: 60px;
     resize: none;
@@ -110,19 +114,40 @@ h5 {
 }
 
 #data {
-    margin: 30px 20px;
+    /*margin: 30px 20px;*/
 }
 
-#data-table {
+#data-container {
     width: 800px;
     margin: 50px auto;
+}
+
+
+#data-table {   
     font-size: 16px;
     font-weight: normal;
 }
 
+#timeout {
+    width: 200px;
+    margin-bottom: 30px;
+    float: right;
+}
+
 #output {
     margin: 50px auto;
-    width: 600px;
+    width: 400px;
+}
+
+#loading {
+    width: 400px;
+    margin: 50px auto;
+    margin-bottom: 30px;
+}
+
+#loading-image {
+    height: 150px;
+    width: 150px;
 }
 
 #go {

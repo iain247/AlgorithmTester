@@ -29,6 +29,8 @@ namespace AlgorithmTester.Models
 
             // compile the user's code
             Compiler.Compile();
+            // set the compiler's max execution time (convert to milliseconds)
+            Compiler.MaxExecutionTime = Model.Timeout * 1000;
 
             // attempt to calculate accuracy
             Task t1 = null;
@@ -49,7 +51,7 @@ namespace AlgorithmTester.Models
 
             // sleep breifly to make sure the executable is not being used
             Thread.Sleep(100);
-            Compiler.DeleteAllFiles();
+            //Compiler.DeleteAllFiles();
         }
 
         public async Task CalculateAccuracy()
@@ -62,9 +64,7 @@ namespace AlgorithmTester.Models
 
             Comparator comparator = AccuracyCalculatorFactory.Create(Model.OutputData, calculatedOutput, identifier);
 
-            //AccuracyCalculator comparator = new AccuracyCalculator(Model.OutputData, calculatedOutput, identifier);
-
-
+            // find results and accuracy and update model
             Model.Results = comparator.FindResults();
             double accuracy = comparator.CalculateAccuracy(Model.Results);
             Model.Accuracy = Math.Round(accuracy, 2).ToString() + "%";
@@ -110,7 +110,8 @@ namespace AlgorithmTester.Models
             // run the executable with the given arguments
             Task<string> run = Compiler.RunExecutable(arguments);
             // check if the tasks completes before the max execution time
-            Task first = await Task.WhenAny(run, Task.Delay(CodeCompiler.MaxExecutionTime));
+            // wait 500ms less than max execution time to account for discrepancies in timing
+            Task first = await Task.WhenAny(run, Task.Delay(Compiler.MaxExecutionTime - 200));
 
             // if the delay finishes before the execution, mark as "timeout"
             if (first.Id != run.Id)
@@ -119,7 +120,6 @@ namespace AlgorithmTester.Models
             // return the results of the executable
             return run.Result;
         }
-
 
         public async Task CalculateSpeed()
         {

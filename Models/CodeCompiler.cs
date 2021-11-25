@@ -12,7 +12,7 @@ namespace AlgorithmTester.Models
     public class CodeCompiler
     {
         public FileHandler FH { get; set; }
-        public const int MaxExecutionTime = 10000;
+        public int MaxExecutionTime { get; set; }
 
         public CodeCompiler(List<string> argumentTypes, string code)
         {
@@ -60,7 +60,7 @@ namespace AlgorithmTester.Models
             Process proc = Process.Start(ps);
 
             // if the process has not finished within a certain time, abort the process
-            Timer timer = new Timer(_ => KillAllProcesses(proc.Id), null, 10000, -1);
+            Timer timer = new Timer(_ => KillAllProcesses(proc.Id), null, MaxExecutionTime, -1);
 
             return proc.StandardOutput.ReadLineAsync();
           

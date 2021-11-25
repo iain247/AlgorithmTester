@@ -20,8 +20,8 @@ namespace AlgorithmTester.Models
 
         public double CalculateAccuracy(List<string> correctAnswers)
         {
-            // return -1 if no data supplied
-            if (correctAnswers.Count() == 0) return -1;
+            // return 0 if no data supplied
+            if (correctAnswers.Count() == 0) return 0;
 
             double NoOfCorrect = correctAnswers.Count(x => x.Equals("Correct"));
 

@@ -11,13 +11,13 @@ namespace AlgorithmTester.Models
     {
         public string Code { get; set; }
         public string Accuracy { get; set; }
-        public string Speed { get; set; }
         public List<string> InputData { get; set; }
         public List<string> OutputData { get; set; }  
         public List<string> Results { get; set; }
         public List<TestingData> TestArguments { get; set; }
         public List<string> ArgumentNames { get; set; }
         public List<string> Times { get; set; }
+        public int Timeout { get; set; }
         private int _numData;
         public int NumData
         {
@@ -29,12 +29,13 @@ namespace AlgorithmTester.Models
         public FormModel()
         {
             // values to populate initial table
-            this.Code = "public class Solution {\n\tpublic static int Algorithm(int n)\n\t{\n\t\t//Enter code here\n\t\treturn 0;\n\t}\n}";
+            this.Code = "public class Solution\n{\n\tpublic static int Algorithm(int n)\n\t{\n\t\t//Enter code here\n\t\treturn 0;\n\t}\n}";
             this.InputData = new List<string>() { "", "", "" };
             this.OutputData = new List<string>() { "", "", "" };
             this.Results = new List<string>() { "", "", "" };
             this.Accuracy = "";
             this.UserMessage = String.Empty;
+            this.Timeout = 10;
         }
 
         public void PadData()

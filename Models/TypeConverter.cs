@@ -39,60 +39,60 @@ namespace AlgorithmTester.Models
                 {"string[]", typeof(string[])},
             };
 
-        public static Type GetType(string typeString)
-        {
-            return TypeDict[typeString];
-        }
+        //public static Type GetType(string typeString)
+        //{
+        //    return TypeDict[typeString];
+        //}
 
-        public static string GetDefaultString(string typeString)
-        {
-            Type type = TypeDict[typeString];
-            // if type is a value type, use activator to call the default constructor to get default value
-            if (type.IsValueType)
-            {
-                return Activator.CreateInstance(type).ToString();
-            }
-            // for reference type, the default value is null
-            return null;
-        }
+        //public static string GetDefaultString(string typeString)
+        //{
+        //    Type type = TypeDict[typeString];
+        //    // if type is a value type, use activator to call the default constructor to get default value
+        //    if (type.IsValueType)
+        //    {
+        //        return Activator.CreateInstance(type).ToString();
+        //    }
+        //    // for reference type, the default value is null
+        //    return null;
+        //}
 
-        public static List<object> CastList(List<string> values, string type)
-        {
-            var newValues = new List<object>();
+        //public static List<object> CastList(List<string> values, string type)
+        //{
+        //    var newValues = new List<object>();
 
-            foreach (string value in values)
-            {
-                var newValue = Cast(value, type);
-                newValues.Add(newValue);
-            }
+        //    foreach (string value in values)
+        //    {
+        //        var newValue = Cast(value, type);
+        //        newValues.Add(newValue);
+        //    }
 
-            return newValues;
-        }
+        //    return newValues;
+        //}
 
-        public static object Cast(string value, string typeString)
-        {
-            Type type = TypeDict[typeString];
-            return Convert.ChangeType(value, type);
-        }
+        //public static object Cast(string value, string typeString)
+        //{
+        //    Type type = TypeDict[typeString];
+        //    return Convert.ChangeType(value, type);
+        //}
 
-        public static T[] GetTypeFromStringList<T>(string[] values)
-        {
-            var list = new T[values.Length];
+        //public static T[] GetTypeFromStringList<T>(string[] values)
+        //{
+        //    var list = new T[values.Length];
 
-            for (int i = 0; i < values.Count(); i++)
-            {
-                T castValue = GetTypeFromString<T>(values[i]);
-                list[i] = castValue;
-            }
+        //    for (int i = 0; i < values.Count(); i++)
+        //    {
+        //        T castValue = GetTypeFromString<T>(values[i]);
+        //        list[i] = castValue;
+        //    }
 
-            return list;
-        }
+        //    return list;
+        //}
 
-        public static T GetTypeFromString<T>(string value)
-        {
-            var converter = System.ComponentModel.TypeDescriptor.GetConverter(typeof(T));
-            return (T)(converter.ConvertFromInvariantString(value));
-        }
+        //public static T GetTypeFromString<T>(string value)
+        //{
+        //    var converter = System.ComponentModel.TypeDescriptor.GetConverter(typeof(T));
+        //    return (T)(converter.ConvertFromInvariantString(value));
+        //}
 
         public static bool CheckCast(string value, string typeString)
         {
@@ -112,13 +112,8 @@ namespace AlgorithmTester.Models
                     // remove the square brackets and create string array
                     string allElements = value.Replace("[", "").Replace("]", "");
                     string[] valueArray = allElements.Split(',').Select(x => x.Trim()).ToArray();
-                    // convert each item in the array to the array's element type
-                    System.Diagnostics.Debug.WriteLine("value: " + value);
-                    foreach (string s in valueArray)
-                    {
-                        System.Diagnostics.Debug.WriteLine("value in valuearray: " + s);
-                    }
-                    
+
+                    // convert each item in the array to the array's element type              
                     Array.ConvertAll(valueArray, foo => Convert.ChangeType(foo, type.GetElementType()));
                     return true;
                 }

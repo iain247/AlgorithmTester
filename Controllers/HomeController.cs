@@ -18,6 +18,7 @@ namespace AlgorithmTester.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View(new FormModel());
@@ -41,7 +42,6 @@ namespace AlgorithmTester.Controllers
             }
             catch (Exception e)
             {
-                //updatedModel.UserMessage = e.Message;
                 data.UserMessage = e.Message;
             }
 
@@ -51,7 +51,7 @@ namespace AlgorithmTester.Controllers
             return View(data);
         }
 
-        public IActionResult Privacy()
+        public IActionResult Instructions()
         {
             return View();
         }

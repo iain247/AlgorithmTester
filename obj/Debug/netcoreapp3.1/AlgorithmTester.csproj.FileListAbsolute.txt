@@ -23,7 +23,6 @@ C:\Users\iainr\Documents\repos\AlgorithmTester\obj\Debug\netcoreapp3.1\Algorithm
 C:\Users\iainr\Documents\repos\AlgorithmTester\obj\Debug\netcoreapp3.1\AlgorithmTester.TagHelpers.output.cache
 C:\Users\iainr\Documents\repos\AlgorithmTester\obj\Debug\netcoreapp3.1\AlgorithmTester.RazorCoreGenerate.cache
 C:\Users\iainr\Documents\repos\AlgorithmTester\obj\Debug\netcoreapp3.1\Razor\Views\Home\Index.cshtml.g.cs
-C:\Users\iainr\Documents\repos\AlgorithmTester\obj\Debug\netcoreapp3.1\Razor\Views\Home\Privacy.cshtml.g.cs
 C:\Users\iainr\Documents\repos\AlgorithmTester\obj\Debug\netcoreapp3.1\Razor\Views\Shared\Error.cshtml.g.cs
 C:\Users\iainr\Documents\repos\AlgorithmTester\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
 C:\Users\iainr\Documents\repos\AlgorithmTester\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_ValidationScriptsPartial.cshtml.g.cs
@@ -46,3 +45,4 @@ C:\Users\iainr\Documents\repos\AlgorithmTester\bin\Debug\netcoreapp3.1\runtimes\
 C:\Users\iainr\Documents\repos\AlgorithmTester\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Security.AccessControl.dll
 C:\Users\iainr\Documents\repos\AlgorithmTester\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
 C:\Users\iainr\Documents\repos\AlgorithmTester\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.1\System.Security.Principal.Windows.dll
+C:\Users\iainr\Documents\repos\AlgorithmTester\obj\Debug\netcoreapp3.1\Razor\Views\Home\Instructions.cshtml.g.cs
