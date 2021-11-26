@@ -161,3 +161,15 @@ h5 {
     margin: auto;
     vertical-align: middle;
 }
+
+/* Index page styling
+-------------------------------------------------- */
+#instructions {
+    width: 800px;
+    text-align: justify;
+    margin: auto;
+}
+
+#instruction-heading {
+    text-align: center;
+}

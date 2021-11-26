@@ -99,7 +99,10 @@ namespace AlgorithmTester.Models
             if (!File.Exists(FH.GetExecutable()))
             {
                 string errorMessage = ExtractErrorMessage(compilationOutput);
-                throw new CompilationErrorException(errorMessage);
+                if (String.IsNullOrEmpty(errorMessage))
+                    throw new CompilationErrorException("Do you have csc compiler installed?");
+                else
+                    throw new CompilationErrorException(errorMessage);
             }
         }
 
