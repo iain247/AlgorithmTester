@@ -8,15 +8,22 @@ function setTableSize(n) {
     return n-1;
 }
 
-/*
-   * show the loading gif until page loads
-   */
-//$(window).load(function () {
-//    
-//});
-
 
 $(document).ready(function () {
+
+    /*
+     * set codemirror
+     */
+    var codeTextArea = $("#code-input")[0];
+    var codeMirror = CodeMirror.fromTextArea(codeTextArea, {
+        lineNumbers: true,
+        mode: "text/x-csharp",
+        indentUnit: 4,
+    });
+
+    /*
+     * Hide the loading wheel
+     */
     $('#loading').hide();
 
     // set current row number and table size data
@@ -65,7 +72,7 @@ $(document).ready(function () {
      * function for reseting textarea to default class and method headers
      */
     $("body").on("click", "#reset", function () {
-        $("#code-input").val(defaultCode);
+        codeMirror.setValue(defaultCode);
     })
 
     /*

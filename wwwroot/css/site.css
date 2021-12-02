@@ -90,16 +90,28 @@ h5 {
     background-color: white;
 }
 
+.CodeMirror {
+    text-align: left !important;
+    height: 500px !important;
+    resize: none !important;
+    z-index: 0 !important;
+    border-style: solid;
+    border-radius: 3px;
+    border-color: darkgray;
+    border-width: 2px;
+}
+
+
 #user-message {
     height: 60px;
     resize: none;
     font-family: Consolas, sans-serif;
 }
 
-#reset {
-    
+#reset { 
     height: 30px;
     width: 30px;
+    z-index: 10 !important;
 }
 
 #code-container {

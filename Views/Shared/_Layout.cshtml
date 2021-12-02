@@ -6,7 +6,9 @@
     <title>@ViewData["Title"] - AlgorithmTester</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    @RenderSection("css", required:false)
+    <link rel="stylesheet" href="~/codemirror/lib/codemirror.css">
+
+    @RenderSection("css", required: false)
 </head>
 <body>
     <header>
@@ -44,6 +46,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/codemirror/lib/codemirror.js"></script>
+    <script src="~/codemirror/mode/clike/clike.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>
