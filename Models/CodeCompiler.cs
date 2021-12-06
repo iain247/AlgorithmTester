@@ -40,9 +40,6 @@ namespace AlgorithmTester.Models
             proc.WaitForExit();
         }
 
-        /*
-         *  TRY THIS FOR THE SPEED CHECKS
-         */
 
         public Task<string> RunExecutable(string arguments)
         {
@@ -149,7 +146,7 @@ namespace AlgorithmTester.Models
         public CompilationErrorException() { }
 
         public CompilationErrorException(string error)
-            : base("Compilation error:\n" + error) { }
+            : base("Compilation Error:\n" + error) { }
     }
 
     public class ExecutionErrorException : Exception
@@ -157,6 +154,6 @@ namespace AlgorithmTester.Models
         public ExecutionErrorException() { }
 
         public ExecutionErrorException(string error)
-            : base("Execution error:\n" + error) { }
+            : base("Execution Error:\n" + error) { }
     }
 }

@@ -81,7 +81,7 @@ namespace AlgorithmTester.Models
             // check that the method is static
             if (!MethodHeader.Contains("static"))
             {
-                throw new InvalidCodeException("No static method found");
+                throw new InvalidCodeException("Algorithm method is not static");
             }
         }
 
@@ -112,8 +112,11 @@ namespace AlgorithmTester.Models
 
             Identifier = methodHeaderWords[identifierIndex];
 
+            if (Identifier.Equals("void"))
+                throw new InvalidCodeException("Algorithm must return a value");
+
             if (!AllowedIdentifiers.Contains(Identifier))
-                throw new InvalidCodeException(Identifier + " is an invalid return type. Return type must follow the static keyword");
+                throw new InvalidCodeException(Identifier + " is an invalid return type");
         }
 
         /*
@@ -173,12 +176,12 @@ namespace AlgorithmTester.Models
     public class InvalidCodeException : Exception
     {
         public InvalidCodeException(string message)
-            : base("Error with code: " + message) { }
+            : base("Code Error: " + message) { }
     }
 
     public class InvalidDataException : Exception
     {
         public InvalidDataException(string message)
-            : base("Error with data: " + message) { }
+            : base("Data Error: " + message) { }
     }
 }
