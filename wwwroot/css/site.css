@@ -173,3 +173,11 @@ h5 {
     margin: auto;
     vertical-align: middle;
 }
+
+
+/* Instructions page styling
+-------------------------------------------------- */
+
+#instructions {
+    text-align: justify;
+}
